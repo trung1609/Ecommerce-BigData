@@ -1,0 +1,30 @@
+{
+  "dataset_name_user_provided": "REES46 Multi-category Behavior Events",
+  "file_name": "2019-Oct.csv",
+  "relative_path": "data/bronze/2019-Oct.csv",
+  "source_relative_to_project": "../2019-Oct.csv",
+  "source_url": null,
+  "license": null,
+  "downloaded_at": null,
+  "recorded_on": "2026-10-05",
+  "recorded_timezone": "Asia/Bangkok",
+  "size_bytes": 5668612855,
+  "hash_algorithm": "SHA-256",
+  "sha256": "fedd938409b5f836ec89b39c861b13dad99fc7cd9beb1fddd97a2d50488b5b80",
+  "source_sha256": "fedd938409b5f836ec89b39c861b13dad99fc7cd9beb1fddd97a2d50488b5b80",
+  "copy_matches_source": true,
+  "header_observed": [
+    "event_time",
+    "event_type",
+    "product_id",
+    "category_id",
+    "category_code",
+    "brand",
+    "price",
+    "user_id",
+    "user_session"
+  ],
+  "row_count": null,
+  "data_quality_profiled": false,
+  "notes": "Original retained unchanged. Hash verifies local copy equality, not source authenticity. Source URL, license and download date need confirmation from the actual download source."
+}

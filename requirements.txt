@@ -1,0 +1,4 @@
+# Pipeline 1 dùng quản lý file và công cụ sẵn có; chưa cần thư viện ngoài.
+# Khi triển khai Pipeline 2–6 mới bổ sung phiên bản tương thích của:
+# pyspark (bao gồm Spark MLlib), streamlit và các thư viện thực sự cần thiết.
+# Không chạy cài đặt Spark/ML/dashboard ở giai đoạn hiện tại.

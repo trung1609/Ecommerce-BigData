@@ -1,0 +1,30 @@
+# Dữ liệu gốc và dữ liệu được sinh ra không đưa lên Git
+/data/**/*
+!/data/**/
+!/data/**/.gitkeep
+*.[cC][sS][vV]
+*.parquet
+*.zip
+*.gz
+
+# Mô hình, môi trường và file tạm
+/models/*
+!/models/README.md
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.pytest_cache/
+*.log
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+.DS_Store
+Thumbs.db
+
+# File cục bộ của Spark khi triển khai sau này
+spark-warehouse/
+metastore_db/
+derby.log
