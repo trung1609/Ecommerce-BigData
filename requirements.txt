@@ -1,9 +1,10 @@
 # Core Big Data Processing & Storage (Member 1 - Data Engineer)
 pyspark==3.5.1
-pyarrow==15.0.0
+pyarrow>=15.0.0
 
 # Analytics & Dashboard Visualization (Member 2 - Data Analyst)
-streamlit>=1.32.0
+duckdb>=1.0.0
+streamlit>=1.35.0
 plotly>=5.20.0
 pandas>=2.2.0
 

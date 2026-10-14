@@ -6,6 +6,9 @@
 *.parquet
 *.zip
 *.gz
+*.rar
+*.7z
+*.tar
 
 # Mô hình, môi trường và file tạm
 /models/*
