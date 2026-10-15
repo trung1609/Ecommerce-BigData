@@ -18,9 +18,8 @@ Mục tiêu chính là dự đoán xác suất một phiên người dùng sẽ 
 
 - Python 3.11 (đã kiểm tra end-to-end với PySpark 3.5.8); không dùng Python 3.14 cho model loading với PySpark 3.5.x
 - Java 8+ để Spark chạy
-- Trên Windows, cần Hadoop native binaries trong `HADOOP_HOME\bin`:
-  - `winutils.exe`
-  - `hadoop.dll`
+- Trên Windows, repo có sẵn `hadoop/bin/winutils.exe` và `hadoop/bin/hadoop.dll`; `create_spark_session()` tự nhận diện chúng nếu `HADOOP_HOME` chưa cấu hình hoặc trỏ sai. Có thể dùng Hadoop cài riêng bằng cách đặt `HADOOP_HOME` hợp lệ.
+- Không cần file `.env`; `HADOOP_HOME` và `PYSPARK_PYTHON` được cấu hình khi khởi tạo Spark. Mỗi thành viên vẫn cần tạo Python venv và cài dependency trên máy mình.
 - Cài đặt dependency:
 
 ```powershell
@@ -85,6 +84,8 @@ Mô hình tốt nhất theo PR-AUC ở lần chạy thực tế là `Gradient-Bo
 ## Ghi chú
 
 - `sample_100k.csv` là dữ liệu mẫu do Member 1 bàn giao, dùng cho phát triển và smoke test.
+- CSV mẫu không nằm trong Git; cần nhận file từ Member 1 hoặc dùng Silver Parquet đã tạo sẵn.
+- Parquet và model được bỏ qua trong Git; sau khi clone cần chạy feature engineering và train trước khi dashboard Tab 5 có thể inference.
 - Khi triển khai trên dữ liệu Silver đầy đủ, nên chạy lại pipeline trên dữ liệu đầy đủ để cập nhật lại metrics cuối cùng.
-- Không đưa `winutils.exe` / `hadoop.dll` vào repository; chỉ cần cấu hình `HADOOP_HOME` phù hợp ở máy local.
+- Nếu không dùng Hadoop binaries đi kèm repo, cấu hình `HADOOP_HOME` riêng trên máy local.
 - `create_spark_session()` cấu hình Python worker dùng đúng interpreter hiện tại qua `PYSPARK_PYTHON`, cần thiết khi chạy từ một executable venv không được activate trong `PATH`.

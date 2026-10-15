@@ -174,6 +174,19 @@ def build_session_features(events: DataFrame) -> DataFrame:
 
 
 def create_spark_session(app_name: str = "ecommerce-ml-features") -> SparkSession:
+    if os.name == "nt":
+        hadoop_home = Path(os.environ.get("HADOOP_HOME", ""))
+        native_files = (hadoop_home / "bin" / "winutils.exe", hadoop_home / "bin" / "hadoop.dll")
+        if not all(path.is_file() for path in native_files):
+            hadoop_home = Path(__file__).resolve().parents[2] / "hadoop"
+            native_files = (hadoop_home / "bin" / "winutils.exe", hadoop_home / "bin" / "hadoop.dll")
+        if all(path.is_file() for path in native_files):
+            os.environ["HADOOP_HOME"] = str(hadoop_home)
+            hadoop_bin = str(hadoop_home / "bin")
+            path_entries = os.environ.get("PATH", "").split(os.pathsep)
+            if not any(os.path.normcase(os.path.abspath(entry)) == os.path.normcase(os.path.abspath(hadoop_bin)) for entry in path_entries if entry):
+                os.environ["PATH"] = os.pathsep.join([hadoop_bin, *filter(None, path_entries)])
+
     worker_python = os.environ.get("PYSPARK_PYTHON")
     if not worker_python or not Path(worker_python).is_file():
         os.environ["PYSPARK_PYTHON"] = sys.executable
