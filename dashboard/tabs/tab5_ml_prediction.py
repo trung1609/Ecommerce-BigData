@@ -10,7 +10,7 @@ import time
 
 def render_tab5_ml_prediction():
     """Render Tab 5: Mô Phỏng Dự Đoán Mua Hàng Bằng Machine Learning."""
-    st.markdown("### 🔮 Mô Phỏng Dự Đoán Khả Năng Mua Hàng (ML Purchase Predictor)")
+    st.markdown("### Mô Phỏng Dự Đoán Khả Năng Mua Hàng (ML Purchase Predictor)")
     st.markdown("""
     Mô hình dự đoán hành vi chốt đơn của khách hàng dựa trên dữ liệu các phiên duyệt web thương mại điện tử. 
     Nhập các thông số hành vi của phiên duyệt web để ước lượng xác suất khách hàng sẽ thực hiện hành vi **`purchase`**.
@@ -56,7 +56,7 @@ def render_tab5_ml_prediction():
             value=14
         )
 
-        predict_btn = st.button("🚀 Chạy Mô Hình Suy Luận AI", type="primary", width="stretch")
+        predict_btn = st.button("Chạy Mô Hình Dự Đoán", type="primary", width="stretch")
 
     # Tính toán đặc trưng và đóng góp vào xác suất
     base_prob = 5.0
@@ -105,13 +105,13 @@ def render_tab5_ml_prediction():
 
         # Khuyến nghị kinh doanh dựa theo xác suất
         if prob >= 70:
-            rec_text = "🟢 <b>Khả Năng Chốt Đơn Rất Cao:</b> Khách hàng đang có ý định mua rõ rệt. Đề xuất: Hiển thị ưu đãi Flash Sale đếm ngược hoặc Miễn phí vận chuyển để chốt đơn ngay!"
+            rec_text = "<b>Khả Năng Chốt Đơn Rất Cao:</b> Khách hàng đang có ý định mua rõ rệt. Đề xuất: Hiển thị ưu đãi Flash Sale đếm ngược hoặc Miễn phí vận chuyển để chốt đơn ngay!"
             border_col = "#10b981"
         elif prob >= 40:
-            rec_text = "🟡 <b>Khách Hàng Đang Đắn Đo:</b> Khách đã thêm giỏ hoặc xem nhiều lần. Đề xuất: Gợi ý sản phẩm tương tự hoặc đánh giá tích cực của người mua trước."
+            rec_text = "<b>Khách Hàng Đang Đắn Đo:</b> Khách đã thêm giỏ hoặc xem nhiều lần. Đề xuất: Gợi ý sản phẩm tương tự hoặc đánh giá tích cực của người mua trước."
             border_col = "#f59e0b"
         else:
-            rec_text = "🔴 <b>Khách Vãng Lai:</b> Chưa có dấu hiệu mua hàng cao. Đề xuất: Không làm phiền bằng quá nhiều pop-up, tập trung tối ưu tốc độ duyệt trang."
+            rec_text = "<b>Khách Vãng Lai:</b> Chưa có dấu hiệu mua hàng cao. Đề xuất: Không làm phiền bằng quá nhiều pop-up, tập trung tối ưu tốc độ duyệt trang."
             border_col = "#ef4444"
 
         st.markdown(f"""
@@ -122,7 +122,7 @@ def render_tab5_ml_prediction():
 
     # Feature Importance / Explainability (XAI)
     st.markdown("<div style='margin-top: 15px;'></div>", unsafe_allow_html=True)
-    with st.expander("🔍 Giải Thích Đóng Góp Của Các Đặc Trưng (Explainable AI - XAI)", expanded=True):
+    with st.expander("Giải Thích Đóng Góp Của Các Đặc Trưng (Explainable AI - XAI)", expanded=True):
         feature_names = ["Hành Động Thêm Giỏ", "Lượt Xem Sản Phẩm", "Khung Giờ Mua Sắm", "Tác Động Mức Giá"]
         feature_weights = [impact_cart, impact_view, impact_hour, impact_price]
         colors = ['#10b981' if w >= 0 else '#ef4444' for w in feature_weights]

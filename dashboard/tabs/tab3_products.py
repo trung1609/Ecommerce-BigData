@@ -23,7 +23,7 @@ def render_tab3_products(filters: dict):
     else:
         df_display = df_brand
 
-    st.markdown("### 🏷️ Xếp Hạng Sản Phẩm & Thương Hiệu (Brand & Product Intelligence)")
+    st.markdown("### Xếp Hạng Sản Phẩm & Thương Hiệu (Brand & Product Intelligence)")
     st.markdown("Phân tích cơ cấu doanh thu và tìm ra các đầu tàu kinh doanh theo nguyên lý Pareto 80/20.")
 
     # Top 10 Thương hiệu theo Doanh thu

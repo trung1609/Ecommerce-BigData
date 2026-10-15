@@ -17,7 +17,7 @@ def render_tab4_rfm(filters: dict):
         st.warning("Chưa có dữ liệu Phân khúc RFM. Vui lòng kiểm tra data/gold/customer_segments.parquet.")
         return
 
-    st.markdown("### 👥 Phân Khúc Khách Hàng RFM (Customer Segmentation)")
+    st.markdown("### Phân Khúc Khách Hàng RFM (Customer Segmentation)")
     st.markdown("Phân loại **3.021.435 người dùng** dựa trên 3 tiêu chí cốt lõi: **Recency** (Mới tương tác), **Frequency** (Tần suất), **Monetary** (Chi tiêu).")
 
     # Hiển thị số liệu 3 nhóm tiêu biểu
@@ -34,7 +34,7 @@ def render_tab4_rfm(filters: dict):
     with col1:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-label">🏆 Khách VIP (Champions)</div>
+            <div class="metric-label">Khách VIP (Champions)</div>
             <div class="metric-value">{champ_count:,} <span style="font-size: 1rem; color: #94a3b8;">users</span></div>
             <div class="metric-delta delta-positive">Chi tiêu TB: ${champ_avg_spend:,.2f}/khách</div>
         </div>
@@ -42,7 +42,7 @@ def render_tab4_rfm(filters: dict):
     with col2:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-label">💎 Khách Trung Thành (Loyal)</div>
+            <div class="metric-label">Khách Trung Thành (Loyal)</div>
             <div class="metric-value">{loyal_count:,} <span style="font-size: 1rem; color: #94a3b8;">users</span></div>
             <div class="metric-delta delta-positive">Tần suất ghé thăm ổn định</div>
         </div>
@@ -50,7 +50,7 @@ def render_tab4_rfm(filters: dict):
     with col3:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-label">⚠️ Nguy Cơ Rời Bỏ (At Risk)</div>
+            <div class="metric-label">Nguy Cơ Rời Bỏ (At Risk)</div>
             <div class="metric-value">{at_risk_count:,} <span style="font-size: 1rem; color: #94a3b8;">users</span></div>
             <div class="metric-delta delta-negative">Cần gửi Voucher tái kích hoạt</div>
         </div>
@@ -75,7 +75,6 @@ def render_tab4_rfm(filters: dict):
                 'Hibernating': '#ec4899',
                 'Lost / Casual Visitors': '#64748b'
             },
-            template="plotly_dark",
             hole=0.4
         )
         fig_user_pie.update_layout(
