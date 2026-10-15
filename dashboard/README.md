@@ -27,4 +27,6 @@ streamlit run dashboard/app.py
 Trình duyệt sẽ tự động mở tại địa chỉ: **`http://localhost:8501`**.
 Tốc độ nạp dữ liệu và phản hồi thao tác: **< 0.1 giây** (nhờ cơ chế `@st.cache_data`).
 
-Tab 5 cần mô hình đã được huấn luyện tại `models/best_purchase_model/`. Xem [hướng dẫn ML](../src/ml/README.md) để tạo features và train model. Nếu model chưa tồn tại, tab sẽ hiển thị thông báo thay vì dùng xác suất giả lập.
+Tab 5 gọi `load_purchase_model()` và `predict_purchase_probability()` từ module ML của Member 3. Tab yêu cầu model đã được huấn luyện tại `models/best_purchase_model/`; nếu model chưa tồn tại, dashboard hiển thị thông báo hướng dẫn thay vì dùng xác suất giả lập.
+
+Các đặc trưng gửi tới model gồm `view_count`, `cart_count`, `distinct_products`, `distinct_categories`, `avg_price`, `max_price`, `hour_of_day`, `is_weekend` và `top_category_viewed`. Xem [hướng dẫn ML](../src/ml/README.md) để tạo feature table và huấn luyện model.
