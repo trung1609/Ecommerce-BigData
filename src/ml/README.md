@@ -16,7 +16,7 @@ Mục tiêu chính là dự đoán xác suất một phiên người dùng sẽ 
 
 ## Yêu cầu môi trường
 
-- Python 3.11+ hoặc Python 3.14 đã được kiểm tra hoạt động trong venv của repo
+- Python 3.11 (đã kiểm tra end-to-end với PySpark 3.5.8); không dùng Python 3.14 cho model loading với PySpark 3.5.x
 - Java 8+ để Spark chạy
 - Trên Windows, cần Hadoop native binaries trong `HADOOP_HOME\bin`:
   - `winutils.exe`
@@ -24,8 +24,8 @@ Mục tiêu chính là dự đoán xác suất một phiên người dùng sẽ 
 - Cài đặt dependency:
 
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+uv venv --python 3.11 .venv
+uv pip install --python .venv\Scripts\python.exe -r requirements.txt
 ```
 
 ## Quy trình chạy
@@ -87,3 +87,4 @@ Mô hình tốt nhất theo PR-AUC ở lần chạy thực tế là `Gradient-Bo
 - `sample_100k.csv` là dữ liệu mẫu do Member 1 bàn giao, dùng cho phát triển và smoke test.
 - Khi triển khai trên dữ liệu Silver đầy đủ, nên chạy lại pipeline trên dữ liệu đầy đủ để cập nhật lại metrics cuối cùng.
 - Không đưa `winutils.exe` / `hadoop.dll` vào repository; chỉ cần cấu hình `HADOOP_HOME` phù hợp ở máy local.
+- `create_spark_session()` cấu hình Python worker dùng đúng interpreter hiện tại qua `PYSPARK_PYTHON`, cần thiết khi chạy từ một executable venv không được activate trong `PATH`.

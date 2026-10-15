@@ -20,6 +20,8 @@ def load_purchase_model(model_path: str = DEFAULT_MODEL_PATH) -> PipelineModel:
     path = Path(model_path)
     if not path.exists():
         raise FileNotFoundError(f"Purchase model not found: {path}")
+    if SparkSession.getActiveSession() is None:
+        create_spark_session("ecommerce-purchase-model-loading")
     return PipelineModel.load(str(path))
 
 

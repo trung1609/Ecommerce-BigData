@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
+import sys
 
 from pyspark.sql import DataFrame, SparkSession, Window
 from pyspark.sql import functions as F
@@ -172,6 +174,9 @@ def build_session_features(events: DataFrame) -> DataFrame:
 
 
 def create_spark_session(app_name: str = "ecommerce-ml-features") -> SparkSession:
+    worker_python = os.environ.get("PYSPARK_PYTHON")
+    if not worker_python or not Path(worker_python).is_file():
+        os.environ["PYSPARK_PYTHON"] = sys.executable
     return (
         SparkSession.builder.appName(app_name)
         .config("spark.sql.shuffle.partitions", "16")
