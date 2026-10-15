@@ -1,6 +1,6 @@
 # Chức năng từng thư mục và file
 
-Mọi đường dẫn dưới đây đều tính từ `ecommerce-bigdata/`. Thư mục Pipeline 2–6 hiện chỉ chứa tài liệu mô tả, không có chương trình thực thi.
+Mọi đường dẫn dưới đây đều tính từ `ecommerce-bigdata/`. Pipeline 5 đã có mã nguồn; Pipeline 2–4 và giao diện Pipeline 6 hiện vẫn là tài liệu mô tả. Tạo Parquet/model trên Windows cần Hadoop native binaries.
 
 | Thư mục | Chức năng |
 | --- | --- |
@@ -25,7 +25,7 @@ Mọi đường dẫn dưới đây đều tính từ `ecommerce-bigdata/`. Thư
 | --- | --- |
 | `README.md` | Điểm bắt đầu: phạm vi, cây thư mục, hướng dẫn, quy tắc nhóm |
 | `.gitignore` | Ngăn Git theo dõi dữ liệu lớn, môi trường, cache, bí mật và đầu ra mô hình |
-| `requirements.txt` | Nơi khai báo thư viện Python về sau; hiện chỉ có chú thích |
+| `requirements.txt` | Dependencies cho Spark MLlib và evaluation |
 | `data/bronze/2019-Oct.csv` | Bản sao nguyên byte của dữ liệu gốc; không sửa trực tiếp |
 | `data/bronze/.gitkeep` | Giữ thư mục bronze trong Git mà không đưa CSV lên Git |
 | `data/silver/.gitkeep` | Giữ thư mục silver trống trong Git |
@@ -33,16 +33,16 @@ Mọi đường dẫn dưới đây đều tính từ `ecommerce-bigdata/`. Thư
 | `docs/raw_data.md` | Thiết kế Pipeline 1, đường dẫn, header, giới hạn kiểm tra và tiêu chí hoàn thành |
 | `docs/raw_data_manifest.json` | Hồ sơ kích thước, SHA-256 và nguồn dữ liệu đã biết/chưa biết |
 | `docs/project_structure.md` | Tài liệu bạn đang đọc: giải thích mọi thư mục và file ban đầu |
-| `src/README.md` | Giải thích khu vực mã nguồn và trạng thái chưa triển khai |
+| `src/README.md` | Giải thích khu vực mã nguồn và trạng thái triển khai |
 | `src/ingestion/README.md` | Mô tả vai trò Pipeline 2 và điểm dừng hiện tại |
 | `src/etl/README.md` | Mô tả vai trò Pipeline 3 |
 | `src/storage/README.md` | Mô tả vai trò Pipeline 4 |
 | `src/analytics/README.md` | Mô tả khu vực phân tích hành vi |
 | `src/ml/README.md` | Mô tả vai trò Pipeline 5 |
 | `dashboard/README.md` | Mô tả khu vực Streamlit cho Pipeline 6 |
-| `models/README.md` | Giải thích nơi lưu mô hình tương lai |
+| `models/README.md` | Hướng dẫn nơi lưu pipeline/model đã huấn luyện |
 | `notebooks/README.md` | Giải thích nơi thử nghiệm, khám phá dữ liệu |
 | `config/README.md` | Giải thích nơi đặt cấu hình tương lai |
-| `tests/README.md` | Giải thích nơi đặt kiểm thử tương lai |
+| `tests/README.md` | Lệnh chạy kiểm thử feature engineering |
 
-`.gitkeep` là file rỗng theo quy ước, không chạy chương trình và không phải một tính năng xử lý dữ liệu của Git. Chưa tạo `__init__.py`, script chạy hoặc cấu hình Spark vì chưa triển khai mã Python.
+`.gitkeep` là file rỗng theo quy ước, không chạy chương trình và không phải một tính năng xử lý dữ liệu của Git. Mã ML chạy dưới dạng module Python; xem `src/ml/README.md` để biết lệnh và prerequisite.
