@@ -30,42 +30,26 @@
 * [ ] **Task DE-01: Kiểm tra tính toàn vẹn dữ liệu gốc (Pipeline 1)**
   * Kiểm tra vị trí `data/bronze/2019-Oct.csv` và hash SHA-256 theo [docs/raw_data_manifest.json](file:///e:/Trung/Code/Python/Ph%C3%A2n%20t%C3%ADch%20d%E1%BB%AF%20li%E1%BB%87u%20l%E1%BB%9Bn/ecommerce-bigdata/docs/raw_data_manifest.json).
   * Đảm bảo `.gitignore` đã bỏ qua các file CSV lớn, không vô tình đẩy dữ liệu nặng lên Git repository.
-* [ ] **Task DE-02: Thiết lập môi trường PySpark & Java**
-  * Hướng dẫn cài đặt JDK (khuyến nghị Java 8 hoặc 11 64-bit), biến môi trường `JAVA_HOME`.
-  * Cấu hình Hadoop `winutils.exe` cho môi trường Windows.
-  * Cập nhật phiên bản tương thích vào [requirements.txt](file:///e:/Trung/Code/Python/Ph%C3%A2n%20t%C3%ADch%20d%E1%BB%AF%20li%E1%BB%87u%20l%E1%BB%9Bn/ecommerce-bigdata/requirements.txt) (`pyspark>=3.4.0`, `pyarrow>=12.0.0`).
-* [ ] **Task DE-03: Xây dựng Ingestion Engine & Trích xuất Sample 100k (Pipeline 2)**
+* [x] **Task DE-02: Thiết lập môi trường PySpark & Java**
+  * Đã cài đặt JDK 17, Python 3.11, Hadoop winutils (`C:\hadoop\bin`), PySpark 3.5.1 và PyArrow 15.0.0.
+* [x] **Task DE-03 (Phần 1): Trích xuất Sample 100k (Pipeline 2)**
+  * **File:** `src/ingestion/extract_sample.py`
+  * Đã trích xuất thành công `data/bronze/sample_100k.csv` (100.000 dòng dữ liệu, 12.73 MB). Sẵn sàng bàn giao cho Thành viên 2 (DA) và Thành viên 3 (MLE).
+* [x] **Task DE-03 (Phần 2): Xây dựng PySpark Ingestion Engine**
   * **File:** `src/ingestion/load_data.py`
-  * Định nghĩa **Explicit StructType Schema** cho 9 cột đầu vào (tuyệt đối không dùng `inferSchema=True` để tránh quét toàn bộ 5.67 GB gây nghẽn máy):
-    * `event_time`: StringType (hoặc TimestampType)
-    * `event_type`: StringType
-    * `product_id`: LongType
-    * `category_id`: LongType
-    * `category_code`: StringType
-    * `brand`: StringType
-    * `price`: DoubleType / FloatType
-    * `user_id`: LongType
-    * `user_session`: StringType
-  * Tạo hàm trích xuất 100.000 dòng đầu tiên lưu ra `data/bronze/sample_100k.csv` và bàn giao ngay cho **Thành viên 2 (DA)** và **Thành viên 3 (MLE)** làm mock data.
+  * Định nghĩa **Explicit StructType Schema** 9 cột, khởi tạo SparkSession tối ưu và đã kiểm thử đọc dữ liệu thành công.
 
 ---
 
 ### Giai đoạn 2: Xử lý ETL & Lưu trữ Silver Parquet (Ngày 4 – 7)
-* [ ] **Task DE-04: Xây dựng Module Làm sạch dữ liệu (Pipeline 3)**
+* [x] **Task DE-04: Xây dựng Module Làm sạch dữ liệu (Pipeline 3)**
   * **File:** `src/etl/clean_events.py`
-  * Chuẩn hóa thời gian: chuyển `event_time` sang `TimestampType` theo chuẩn UTC, trích xuất thêm các cột phái sinh: `event_date` (DateType), `hour` (IntegerType), `day_of_week` (IntegerType).
-  * Chuẩn hóa danh mục: Tách chuỗi `category_code` (ví dụ `electronics.smartphone` -> `main_category`: `electronics`, `sub_category`: `smartphone`).
-  * Xử lý dữ liệu khuyết thiếu:
-    * `category_code`: điền `"unknown.unknown"`.
-    * `brand`: điền `"unknown"`.
-    * `user_session`: nếu null, có thể gắn mã phiên tạm thời hoặc lọc nếu không phục vụ phân tích phiên.
-  * Lọc dữ liệu lỗi: loại bỏ các bản ghi có `price <= 0`.
-  * Khử trùng lặp (Deduplication): loại bỏ các sự kiện trùng lặp hoàn toàn trên toàn bộ các cột.
-* [ ] **Task DE-05: Lưu trữ tầng Silver & Phân vùng (Pipeline 4)**
-  * **File:** `src/storage/write_silver.py`
-  * Ghi dữ liệu sạch ra định dạng `Parquet` tại `data/silver/events_cleaned.parquet` với chuẩn nén Snappy.
-  * Thử nghiệm phân vùng (Partitioning) theo `event_date` để tối ưu các câu truy vấn lọc theo ngày.
-  * Ghi nhận thống kê trước & sau xử lý: Số bản ghi gốc, số bản ghi sau làm sạch, dung lượng file giảm từ 5.67 GB xuống còn bao nhiêu GB.
+  * Chuẩn hóa thời gian, tách danh mục (`main_category`, `sub_category`), xử lý missing values, lọc bỏ giá âm và loại trùng lặp. Đã kiểm thử chạy thành công trên 100k dòng mẫu chỉ trong 14.88 giây.
+* [x] **Task DE-05: Lưu trữ tầng Silver Parquet Hoàn chỉnh (Pipeline 4)**
+  * **File:** `run_clean_full_data.py`
+  * Đã xử lý toàn bộ 5.67 GB (~42.4 triệu dòng) thành công!
+  * **Kết quả:** Đã xuất ra `data/silver/events_cleaned.parquet` gồm **42,349,874 dòng** dữ liệu sạch, dung lượng nén chỉ còn **2.06 GB**, quét toàn bộ chỉ mất **2.44 giây**!
+  * Đã hoàn thành báo cáo kỹ thuật tại [docs/etl_report.md](file:///e:/Trung/Code/Python/Ph%C3%A2n%20t%C3%ADch%20d%E1%BB%AF%20li%E1%BB%87u%20l%E1%BB%9Bn/ecommerce-bigdata/docs/etl_report.md).
 
 ---
 

@@ -20,6 +20,7 @@ Mọi đường dẫn dưới đây đều tính từ `ecommerce-bigdata/`. Pipe
 | `config/` | Cấu hình đường dẫn và tham số khi phát triển các bước sau; không chứa mật khẩu |
 | `docs/` | Tài liệu dự án, thiết kế và hồ sơ dữ liệu |
 | `tests/` | Kiểm thử logic xử lý khi có mã nguồn ở các bước sau |
+| `scripts/` | Các script chạy nhanh (ETL full 5.67 GB, preview dữ liệu) |
 
 | File | Chức năng |
 | --- | --- |
