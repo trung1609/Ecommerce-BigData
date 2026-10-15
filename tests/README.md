@@ -1,5 +1,9 @@
 # tests
 
-Kiểm thử logic xử lý khi có mã nguồn. Bước 1 chỉ kiểm tra file và tính toàn vẹn.
+Chạy kiểm thử feature engineering bằng Spark local:
 
-Chưa triển khai. Hiện chỉ hoàn thành Pipeline 1 – Raw Data.
+```powershell
+.\.venv\Scripts\python.exe -m unittest discover -s tests -p 'test_feature_engineering.py' -v
+```
+
+Test xác nhận nhãn theo phiên, cutoff trước purchase, phiên chỉ có purchase và giờ UTC.
