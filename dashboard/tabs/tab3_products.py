@@ -127,7 +127,7 @@ def render_tab3_products(filters: dict):
             format_product_name
         )
 
-        col_search, col_select = st.columns([5, 5])
+        col_search, col_select, col_k = st.columns([5, 4, 3])
         with col_search:
             search_kw = st.text_input(
                 "Tìm kiếm sản phẩm (tên, ngành hàng, hãng hoặc ID):",
@@ -141,7 +141,7 @@ def render_tab3_products(filters: dict):
         default_map = {item['name']: item['id'] for item in featured_items}
 
         if search_kw.strip():
-            matched_items = search_catalog_products(search_kw, limit=10)
+            matched_items = search_catalog_products(search_kw, limit=12)
             if matched_items:
                 options_map = {item['display_name']: int(item['product_id']) for item in matched_items}
             else:
@@ -152,14 +152,24 @@ def render_tab3_products(filters: dict):
 
         with col_select:
             selected_label = st.selectbox(
-                "Chọn sản phẩm để xem gợi ý liên quan:",
+                "Chọn sản phẩm để xem gợi ý:",
                 options=list(options_map.keys()),
                 index=0,
                 key="rec_src_select"
             )
 
+        with col_k:
+            top_k = st.slider(
+                "Số lượng gợi ý (Top K):",
+                min_value=3,
+                max_value=8,
+                value=3,
+                step=1,
+                key="rec_top_k"
+            )
+
         chosen_id = options_map[selected_label]
-        recs_df, meta = get_recommendations_for_product(chosen_id, top_k=3)
+        recs_df, meta = get_recommendations_for_product(chosen_id, top_k=top_k)
 
         if "error" in meta:
             st.info(f"Thông báo: {meta['error']}. Vui lòng thử một sản phẩm khác.")
@@ -192,35 +202,41 @@ def render_tab3_products(filters: dict):
         """, unsafe_allow_html=True)
 
         if not recs_df.empty:
-            st.markdown("<b>Top 3 Sản Phẩm Được Đề Xuất Nhiều Nhất:</b>", unsafe_allow_html=True)
-            cols = st.columns(len(recs_df))
-            for idx, (_, row) in enumerate(recs_df.iterrows()):
-                with cols[idx]:
-                    match_pct = row['rank_score'] * 100
-                    brand_match = "Cùng Hãng" if row['brand'] == meta['src_brand'].lower() and row['brand'] != 'unknown' else "Khác Hãng"
-                    price_diff_pct = ((row['price'] - meta['src_price']) / meta['src_price']) * 100
-                    rec_title = format_product_name(int(row['product_id']), row['category_code'], row['brand'], row['price'])
+            st.markdown(f"<b>Top {len(recs_df)} Sản Phẩm Được Đề Xuất Phù Hợp Nhất:</b>", unsafe_allow_html=True)
+            
+            # Hiển thị theo lưới tối đa 3-4 cột mỗi hàng để giao diện cân đối
+            GRID_COLS = 3 if len(recs_df) <= 6 else 4
+            for row_start in range(0, len(recs_df), GRID_COLS):
+                row_items = recs_df.iloc[row_start:row_start + GRID_COLS]
+                cols = st.columns(len(row_items))
+                for col_idx, (_, row) in enumerate(row_items.iterrows()):
+                    global_idx = row_start + col_idx
+                    with cols[col_idx]:
+                        match_pct = row['rank_score'] * 100
+                        brand_match = "Cùng Hãng" if row['brand'] == meta['src_brand'].lower() and row['brand'] != 'unknown' else "Khác Hãng"
+                        price_diff_pct = ((row['price'] - meta['src_price']) / meta['src_price']) * 100
+                        rec_title = format_product_name(int(row['product_id']), row['category_code'], row['brand'], row['price'])
 
-                    st.markdown(f"""
-                    <div style="background: var(--secondary-background-color); border: 1px solid rgba(128, 128, 128, 0.2); border-left: 4px solid #0ea5e9; border-radius: 8px; padding: 14px; min-height: 200px;">
-                        <div style="font-size: 0.8rem; opacity: 0.7; text-transform: uppercase;">Top #{idx+1} Gợi Ý</div>
-                        <div style="font-weight: 700; font-size: 0.95rem; margin-top: 4px; color: var(--text-color);">{rec_title}</div>
-                        <div style="font-size: 0.85rem; color: #0ea5e9; margin-top: 2px;">{row['category_code']}</div>
-                        <div style="font-size: 1.2rem; font-weight: 700; color: #10b981; margin-top: 6px;">${row['price']:.2f}</div>
-                        <div style="font-size: 0.8rem; opacity: 0.8; margin-top: 2px;">
-                            Thương hiệu: <b>{str(row['brand']).upper()}</b> ({brand_match})
-                        </div>
-                        <div style="font-size: 0.8rem; opacity: 0.8; margin-top: 2px;">
-                            Độ lệch giá: <b>{price_diff_pct:+.1f}%</b> so với sản phẩm xem
-                        </div>
-                        <div style="margin-top: 12px;">
-                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px;">
-                                <span>Độ phù hợp:</span>
-                                <b>{match_pct:.1f}%</b>
+                        st.markdown(f"""
+                        <div style="background: var(--secondary-background-color); border: 1px solid rgba(128, 128, 128, 0.2); border-left: 4px solid #0ea5e9; border-radius: 8px; padding: 14px; min-height: 200px; margin-bottom: 12px;">
+                            <div style="font-size: 0.8rem; opacity: 0.7; text-transform: uppercase;">Top #{global_idx+1} Gợi Ý</div>
+                            <div style="font-weight: 700; font-size: 0.95rem; margin-top: 4px; color: var(--text-color);">{rec_title}</div>
+                            <div style="font-size: 0.85rem; color: #0ea5e9; margin-top: 2px;">{row['category_code']}</div>
+                            <div style="font-size: 1.2rem; font-weight: 700; color: #10b981; margin-top: 6px;">${row['price']:.2f}</div>
+                            <div style="font-size: 0.8rem; opacity: 0.8; margin-top: 2px;">
+                                Thương hiệu: <b>{str(row['brand']).upper()}</b> ({brand_match})
+                            </div>
+                            <div style="font-size: 0.8rem; opacity: 0.8; margin-top: 2px;">
+                                Độ lệch giá: <b>{price_diff_pct:+.1f}%</b> so với sản phẩm xem
+                            </div>
+                            <div style="margin-top: 12px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px;">
+                                    <span>Độ phù hợp:</span>
+                                    <b>{match_pct:.1f}%</b>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                    st.progress(min(max(row['rank_score'], 0.0), 1.0))
+                        """, unsafe_allow_html=True)
+                        st.progress(min(max(row['rank_score'], 0.0), 1.0))
     except Exception as e:
         st.warning(f"Tính năng gợi ý đang được cập nhật dữ liệu: {e}")
