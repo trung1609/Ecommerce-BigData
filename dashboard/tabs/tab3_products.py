@@ -120,40 +120,49 @@ def render_tab3_products(filters: dict):
     """)
 
     try:
-        from src.analytics.market_basket import get_recommendations_for_product, get_featured_source_products
+        from src.analytics.market_basket import (
+            get_recommendations_for_product, 
+            get_featured_source_products,
+            search_catalog_products,
+            format_product_name
+        )
 
+        col_search, col_select = st.columns([5, 5])
+        with col_search:
+            search_kw = st.text_input(
+                "Tìm kiếm sản phẩm (tên, ngành hàng, hãng hoặc ID):",
+                value="",
+                placeholder="Ví dụ: bàn phím, tai nghe, laptop, apple, samsung, 5800808...",
+                key="rec_search_kw"
+            )
+
+        # Danh sách lựa chọn mặc định từ các sản phẩm tiêu biểu
         featured_items = get_featured_source_products()
-        options_map = {
-            f"{item['name']} (${item['price']:.2f}) - ID: {item['id']}": item['id']
-            for item in featured_items
-        }
-        options_map["Nhập ID sản phẩm tùy chọn..."] = -1
+        default_map = {item['name']: item['id'] for item in featured_items}
 
-        col_select, col_custom = st.columns([7, 3])
+        if search_kw.strip():
+            matched_items = search_catalog_products(search_kw, limit=10)
+            if matched_items:
+                options_map = {item['display_name']: int(item['product_id']) for item in matched_items}
+            else:
+                st.caption(f"Không tìm thấy sản phẩm khớp với '{search_kw}'. Đang hiển thị sản phẩm mẫu tiêu biểu:")
+                options_map = default_map
+        else:
+            options_map = default_map
+
         with col_select:
             selected_label = st.selectbox(
-                "Chọn sản phẩm đang xem:",
+                "Chọn sản phẩm để xem gợi ý liên quan:",
                 options=list(options_map.keys()),
                 index=0,
                 key="rec_src_select"
             )
 
         chosen_id = options_map[selected_label]
-        if chosen_id == -1:
-            with col_custom:
-                chosen_id = st.number_input(
-                    "Nhập Product ID:",
-                    min_value=1000000,
-                    max_value=99999999,
-                    value=5800808,
-                    step=1,
-                    key="rec_custom_id"
-                )
-
         recs_df, meta = get_recommendations_for_product(chosen_id, top_k=3)
 
         if "error" in meta:
-            st.info(f"Thông báo: {meta['error']}. Vui lòng thử một ID sản phẩm khác.")
+            st.info(f"Thông báo: {meta['error']}. Vui lòng thử một sản phẩm khác.")
             return
 
         # Thẻ thông tin sản phẩm nguồn
@@ -163,22 +172,21 @@ def render_tab3_products(filters: dict):
             else f'<span class="badge badge-gold">SẢN PHẨM THAY THẾ (SUBSTITUTE)</span>'
         )
 
+        src_title = format_product_name(meta['src_product_id'], meta['src_category'], meta['src_brand'], meta['src_price'])
+
         st.markdown(f"""
         <div style="background: var(--secondary-background-color); border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 8px; padding: 12px 18px; margin-top: 10px; margin-bottom: 20px;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
                 <div>
                     <span style="font-size: 0.85rem; opacity: 0.8;">Sản phẩm đang xem:</span>
-                    <b style="font-size: 1.05rem; margin-left: 6px;">ID {meta['src_product_id']}</b> 
-                    <span style="margin-left: 10px; font-size: 0.9rem; opacity: 0.9;">[{meta['src_category']}]</span>
-                    <span style="margin-left: 10px; font-weight: 600; color: #0ea5e9;">${meta['src_price']:.2f}</span>
-                    <span style="margin-left: 8px; font-size: 0.85rem;">({meta['src_brand']})</span>
+                    <b style="font-size: 1.05rem; margin-left: 6px;">{src_title}</b> 
                 </div>
                 <div>
                     {badge_type}
                 </div>
             </div>
             <div style="font-size: 0.85rem; margin-top: 6px; opacity: 0.85;">
-                Chiến lược: <b>{meta['recommendation_type']}</b> | Độ tương quan luật kết hợp (Lift): <b>{meta['rule_lift']:.2f}x</b> so với ngẫu nhiên.
+                Ngành hàng: <code>{meta['src_category']}</code> | Chiến lược: <b>{meta['recommendation_type']}</b> | Độ tương quan luật kết hợp (Lift): <b>{meta['rule_lift']:.2f}x</b>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -191,13 +199,14 @@ def render_tab3_products(filters: dict):
                     match_pct = row['rank_score'] * 100
                     brand_match = "Cùng Hãng" if row['brand'] == meta['src_brand'].lower() and row['brand'] != 'unknown' else "Khác Hãng"
                     price_diff_pct = ((row['price'] - meta['src_price']) / meta['src_price']) * 100
+                    rec_title = format_product_name(int(row['product_id']), row['category_code'], row['brand'], row['price'])
 
                     st.markdown(f"""
                     <div style="background: var(--secondary-background-color); border: 1px solid rgba(128, 128, 128, 0.2); border-left: 4px solid #0ea5e9; border-radius: 8px; padding: 14px; min-height: 200px;">
                         <div style="font-size: 0.8rem; opacity: 0.7; text-transform: uppercase;">Top #{idx+1} Gợi Ý</div>
-                        <div style="font-weight: 700; font-size: 1.05rem; margin-top: 4px; color: var(--text-color);">ID {int(row['product_id'])}</div>
+                        <div style="font-weight: 700; font-size: 0.95rem; margin-top: 4px; color: var(--text-color);">{rec_title}</div>
                         <div style="font-size: 0.85rem; color: #0ea5e9; margin-top: 2px;">{row['category_code']}</div>
-                        <div style="font-size: 1.25rem; font-weight: 700; color: #10b981; margin-top: 8px;">${row['price']:.2f}</div>
+                        <div style="font-size: 1.2rem; font-weight: 700; color: #10b981; margin-top: 6px;">${row['price']:.2f}</div>
                         <div style="font-size: 0.8rem; opacity: 0.8; margin-top: 2px;">
                             Thương hiệu: <b>{str(row['brand']).upper()}</b> ({brand_match})
                         </div>

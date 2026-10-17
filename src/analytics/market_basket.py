@@ -244,16 +244,150 @@ def get_recommendations_for_product(
     return ranked_recs, metadata
 
 
+CATEGORY_DISPLAY_MAP = {
+    "electronics.audio.subwoofer": "Loa trầm ô tô",
+    "electronics.smartphone": "Điện thoại",
+    "electronics.video.tv": "Tivi Smart",
+    "electronics.audio.headphone": "Tai nghe",
+    "electronics.clocks": "Đồng hồ thông minh",
+    "computers.peripherals.keyboard": "Bàn phím máy tính",
+    "computers.peripherals.mouse": "Chuột máy tính",
+    "computers.peripherals.monitor": "Màn hình máy tính",
+    "computers.notebook": "Laptop",
+    "auto.accessories.player": "Đầu phát âm thanh ô tô",
+    "auto.accessories.videoregister": "Camera hành trình",
+    "auto.accessories.alarm": "Còi báo động ô tô",
+    "appliances.kitchen.refrigerators": "Tủ lạnh",
+    "appliances.kitchen.washer": "Máy giặt",
+    "appliances.environment.air_conditioner": "Điều hòa / Máy lạnh",
+    "appliances.environment.vacuum": "Máy hút bụi",
+}
+
+VIETNAMESE_SYNONYMS = {
+    "bàn phím": "keyboard",
+    "ban phim": "keyboard",
+    "chuột": "mouse",
+    "chuot": "mouse",
+    "tai nghe": "headphone",
+    "điện thoại": "smartphone",
+    "dien thoai": "smartphone",
+    "máy tính": "notebook",
+    "may tinh": "notebook",
+    "laptop": "notebook",
+    "loa": "audio",
+    "loa trầm": "subwoofer",
+    "loa tram": "subwoofer",
+    "tivi": "tv",
+    "đồng hồ": "watch",
+    "dong ho": "watch",
+    "tủ lạnh": "refrigerator",
+    "tu lanh": "refrigerator",
+    "máy giặt": "washer",
+    "may giat": "washer",
+    "máy hút bụi": "vacuum",
+    "may hut bui": "vacuum",
+    "điều hòa": "air_conditioner",
+    "dieu hoa": "air_conditioner",
+    "máy lạnh": "air_conditioner",
+    "may lanh": "air_conditioner",
+    "camera": "videoregister",
+    "màn hình": "monitor",
+    "man hinh": "monitor",
+}
+
+
+def format_product_name(product_id: int, category_code: str, brand: str, price: float) -> str:
+    """Định dạng tên hiển thị chuyên nghiệp kết hợp ngành hàng và thương hiệu."""
+    cat_vn = CATEGORY_DISPLAY_MAP.get(category_code, category_code.split(".")[-1].capitalize() if category_code else "Sản phẩm")
+    brand_clean = (brand or "unknown").strip().upper()
+    brand_str = brand_clean if brand_clean != "UNKNOWN" else "No-Brand"
+    return f"{cat_vn} {brand_str} (${price:.2f}) - ID: {product_id}"
+
+
+def search_catalog_products(keyword: str, limit: int = 15, data_path: str | None = None) -> list[dict]:
+    """
+    Tìm kiếm sản phẩm theo tên tiếng Việt/Anh, danh mục, thương hiệu hoặc Product ID.
+    Trả về danh sách dict chứa đầy đủ thông tin định dạng để hiển thị trên giao diện.
+    """
+    keyword = (keyword or "").strip()
+    if not keyword:
+        return []
+
+    src_file = data_path or get_silver_source_path()
+    con = duckdb.connect(database=":memory:")
+
+    # Nếu người dùng nhập trực tiếp ID số
+    if keyword.isdigit():
+        df = con.execute(f"""
+            SELECT 
+                product_id, 
+                category_code, 
+                LOWER(COALESCE(brand, 'unknown')) AS brand, 
+                ROUND(price, 2) AS price, 
+                COUNT(*) AS events
+            FROM '{src_file}'
+            WHERE product_id = {int(keyword)}
+            GROUP BY product_id, category_code, brand, price
+            LIMIT 1
+        """).fetchdf()
+        if not df.empty:
+            item = df.iloc[0].to_dict()
+            item['display_name'] = format_product_name(item['product_id'], item['category_code'], item['brand'], item['price'])
+            return [item]
+
+    # Nhận diện từ khóa tiếng Việt / tiếng Anh
+    kw_lower = keyword.lower()
+    search_tokens = [kw_lower]
+    for vn, en in VIETNAMESE_SYNONYMS.items():
+        if vn in kw_lower:
+            search_tokens.append(en)
+
+    clauses = []
+    for token in search_tokens:
+        clean = token.replace("'", "''")
+        clauses.append(f"category_code ILIKE '%{clean}%'")
+        clauses.append(f"brand ILIKE '%{clean}%'")
+
+    where_sql = " OR ".join(clauses)
+
+    query = f"""
+        SELECT 
+            product_id, 
+            category_code, 
+            LOWER(COALESCE(brand, 'unknown')) AS brand, 
+            ROUND(price, 2) AS price, 
+            COUNT(*) AS events
+        FROM '{src_file}'
+        WHERE ({where_sql})
+          AND price IS NOT NULL AND price > 0
+        GROUP BY product_id, category_code, brand, price
+        ORDER BY events DESC
+        LIMIT {limit}
+    """
+    df = con.execute(query).fetchdf()
+    if df.empty:
+        return []
+
+    results = []
+    for _, row in df.iterrows():
+        item = row.to_dict()
+        item['display_name'] = format_product_name(int(item['product_id']), item['category_code'], item['brand'], float(item['price']))
+        results.append(item)
+
+    return results
+
+
 def get_featured_source_products() -> list[dict]:
     """Trả về danh sách 5 sản phẩm tiêu biểu từ các ngành khác nhau để làm demo trên giao diện."""
     return [
-        {"id": 5800808, "name": "Loa trầm Pioneer TS-WX130DA", "cat": "electronics.audio.subwoofer", "brand": "PIONEER", "price": 88.01},
-        {"id": 1004767, "name": "Điện thoại Samsung Galaxy A50", "cat": "electronics.smartphone", "brand": "SAMSUNG", "price": 254.82},
-        {"id": 1004856, "name": "Điện thoại Samsung Galaxy A10", "cat": "electronics.smartphone", "brand": "SAMSUNG", "price": 130.76},
-        {"id": 1307067, "name": "Tivi Samsung Smart TV 4K", "cat": "electronics.video.tv", "brand": "SAMSUNG", "price": 437.59},
-        {"id": 5701245, "name": "Đầu phát âm thanh ô tô Pioneer", "cat": "auto.accessories.player", "brand": "PIONEER", "price": 82.34},
+        {"id": 5800808, "name": "Loa trầm ô tô PIONEER ($88.01) - ID: 5800808", "cat": "electronics.audio.subwoofer", "brand": "PIONEER", "price": 88.01},
+        {"id": 1004767, "name": "Điện thoại SAMSUNG Galaxy A50 ($254.76) - ID: 1004767", "cat": "electronics.smartphone", "brand": "SAMSUNG", "price": 254.76},
+        {"id": 9200581, "name": "Bàn phím máy tính RAPOO ($26.26) - ID: 9200581", "cat": "computers.peripherals.keyboard", "brand": "RAPOO", "price": 26.26},
+        {"id": 4804056, "name": "Tai nghe không dây APPLE ($161.93) - ID: 4804056", "cat": "electronics.audio.headphone", "brand": "APPLE", "price": 161.93},
+        {"id": 1801690, "name": "Tivi Smart SAMSUNG 4K ($368.04) - ID: 1801690", "cat": "electronics.video.tv", "brand": "SAMSUNG", "price": 368.04},
     ]
 
 
 if __name__ == "__main__":
     generate_category_association_rules()
+
