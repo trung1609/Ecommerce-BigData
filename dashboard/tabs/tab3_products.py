@@ -108,3 +108,110 @@ def render_tab3_products(filters: dict):
             Thương hiệu áp đảo là <b>{top1_name}</b> với doanh thu <b>${top1_rev:,.0f}</b>.
         </div>
         """, unsafe_allow_html=True)
+
+    # =========================================================================
+    # PHẦN MỚI: GỢI Ý SẢN PHẨM LIÊN QUAN (TWO-STAGE RECOMMENDATION SYSTEM)
+    # =========================================================================
+    st.markdown("<div style='margin-top: 30px;'></div>", unsafe_allow_html=True)
+    st.markdown("### Gợi Ý Sản Phẩm Liên Quan (Two-Stage Recommendation Engine)")
+    st.markdown("""
+    Hệ thống khai phá luật liên kết giỏ hàng (Market Basket Association) kết hợp bộ lọc ngữ nghĩa đa tiêu chí 
+    (Độ tương thích thương hiệu, phân khúc giá và mức độ tín nhiệm của sản phẩm).
+    """)
+
+    try:
+        from src.analytics.market_basket import get_recommendations_for_product, get_featured_source_products
+
+        featured_items = get_featured_source_products()
+        options_map = {
+            f"{item['name']} (${item['price']:.2f}) - ID: {item['id']}": item['id']
+            for item in featured_items
+        }
+        options_map["Nhập ID sản phẩm tùy chọn..."] = -1
+
+        col_select, col_custom = st.columns([7, 3])
+        with col_select:
+            selected_label = st.selectbox(
+                "Chọn sản phẩm đang xem:",
+                options=list(options_map.keys()),
+                index=0,
+                key="rec_src_select"
+            )
+
+        chosen_id = options_map[selected_label]
+        if chosen_id == -1:
+            with col_custom:
+                chosen_id = st.number_input(
+                    "Nhập Product ID:",
+                    min_value=1000000,
+                    max_value=99999999,
+                    value=5800808,
+                    step=1,
+                    key="rec_custom_id"
+                )
+
+        recs_df, meta = get_recommendations_for_product(chosen_id, top_k=3)
+
+        if "error" in meta:
+            st.info(f"Thông báo: {meta['error']}. Vui lòng thử một ID sản phẩm khác.")
+            return
+
+        # Thẻ thông tin sản phẩm nguồn
+        badge_type = (
+            f'<span class="badge badge-live">GỢI Ý MUA KÈM (CROSS-SELL BUNDLE)</span>'
+            if meta['badge_class'] == "badge-live"
+            else f'<span class="badge badge-gold">SẢN PHẨM THAY THẾ (SUBSTITUTE)</span>'
+        )
+
+        st.markdown(f"""
+        <div style="background: var(--secondary-background-color); border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 8px; padding: 12px 18px; margin-top: 10px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <div>
+                    <span style="font-size: 0.85rem; opacity: 0.8;">Sản phẩm đang xem:</span>
+                    <b style="font-size: 1.05rem; margin-left: 6px;">ID {meta['src_product_id']}</b> 
+                    <span style="margin-left: 10px; font-size: 0.9rem; opacity: 0.9;">[{meta['src_category']}]</span>
+                    <span style="margin-left: 10px; font-weight: 600; color: #0ea5e9;">${meta['src_price']:.2f}</span>
+                    <span style="margin-left: 8px; font-size: 0.85rem;">({meta['src_brand']})</span>
+                </div>
+                <div>
+                    {badge_type}
+                </div>
+            </div>
+            <div style="font-size: 0.85rem; margin-top: 6px; opacity: 0.85;">
+                Chiến lược: <b>{meta['recommendation_type']}</b> | Độ tương quan luật kết hợp (Lift): <b>{meta['rule_lift']:.2f}x</b> so với ngẫu nhiên.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        if not recs_df.empty:
+            st.markdown("<b>Top 3 Sản Phẩm Được Đề Xuất Nhiều Nhất:</b>", unsafe_allow_html=True)
+            cols = st.columns(len(recs_df))
+            for idx, (_, row) in enumerate(recs_df.iterrows()):
+                with cols[idx]:
+                    match_pct = row['rank_score'] * 100
+                    brand_match = "Cùng Hãng" if row['brand'] == meta['src_brand'].lower() and row['brand'] != 'unknown' else "Khác Hãng"
+                    price_diff_pct = ((row['price'] - meta['src_price']) / meta['src_price']) * 100
+
+                    st.markdown(f"""
+                    <div style="background: var(--secondary-background-color); border: 1px solid rgba(128, 128, 128, 0.2); border-left: 4px solid #0ea5e9; border-radius: 8px; padding: 14px; min-height: 200px;">
+                        <div style="font-size: 0.8rem; opacity: 0.7; text-transform: uppercase;">Top #{idx+1} Gợi Ý</div>
+                        <div style="font-weight: 700; font-size: 1.05rem; margin-top: 4px; color: var(--text-color);">ID {int(row['product_id'])}</div>
+                        <div style="font-size: 0.85rem; color: #0ea5e9; margin-top: 2px;">{row['category_code']}</div>
+                        <div style="font-size: 1.25rem; font-weight: 700; color: #10b981; margin-top: 8px;">${row['price']:.2f}</div>
+                        <div style="font-size: 0.8rem; opacity: 0.8; margin-top: 2px;">
+                            Thương hiệu: <b>{str(row['brand']).upper()}</b> ({brand_match})
+                        </div>
+                        <div style="font-size: 0.8rem; opacity: 0.8; margin-top: 2px;">
+                            Độ lệch giá: <b>{price_diff_pct:+.1f}%</b> so với sản phẩm xem
+                        </div>
+                        <div style="margin-top: 12px;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 4px;">
+                                <span>Độ phù hợp:</span>
+                                <b>{match_pct:.1f}%</b>
+                            </div>
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+                    st.progress(min(max(row['rank_score'], 0.0), 1.0))
+    except Exception as e:
+        st.warning(f"Tính năng gợi ý đang được cập nhật dữ liệu: {e}")
