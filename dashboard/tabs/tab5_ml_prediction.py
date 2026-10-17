@@ -173,7 +173,18 @@ def render_tab5_ml_prediction() -> None:
         price_safe = max(float(average_price), 10.0)
         z_price = -0.70 * math.log(price_safe / 250.0)
 
-        z_hour = 0.30 if 18 <= hour <= 22 else (0.15 if 12 <= hour <= 14 else 0.0)
+        # Nhịp sinh học mua sắm 24 giờ (Diurnal Shopping Rhythm):
+        # Đêm muộn/sáng sớm (0h-6h): Tỷ lệ mua thấp kỷ lục (ảnh hưởng âm - thanh đỏ)
+        # Giờ hành chính (8h-11h, 14h-17h): Trung tính / nhích nhẹ
+        # Giờ nghỉ trưa (12h-13h): Nhích lên (+2% xanh)
+        # Giờ vàng tối (18h-22h): Đỉnh điểm mua sắm (+4% đến +6% xanh đậm)
+        HOURLY_Z = {
+            0: -0.35, 1: -0.50, 2: -0.65, 3: -0.75, 4: -0.75, 5: -0.55,
+            6: -0.30, 7: -0.15, 8: 0.00,  9: 0.05,  10: 0.10, 11: 0.15,
+            12: 0.35, 13: 0.30, 14: 0.15, 15: 0.15, 16: 0.20, 17: 0.25,
+            18: 0.45, 19: 0.60, 20: 0.75, 21: 0.65, 22: 0.45, 23: -0.15
+        }
+        z_hour = HOURLY_Z.get(int(hour), 0.0)
         z_weekend = 0.15 if is_weekend else 0.0
 
         total_z = base_z + z_cart + z_view + z_prod + z_price + z_hour + z_weekend
@@ -194,9 +205,16 @@ def render_tab5_ml_prediction() -> None:
         def sigmoid(z: float) -> float:
             return 1.0 / (1.0 + math.exp(-z))
 
+        HOURLY_Z = {
+            0: -0.35, 1: -0.50, 2: -0.65, 3: -0.75, 4: -0.75, 5: -0.55,
+            6: -0.30, 7: -0.15, 8: 0.00,  9: 0.05,  10: 0.10, 11: 0.15,
+            12: 0.35, 13: 0.30, 14: 0.15, 15: 0.15, 16: 0.20, 17: 0.25,
+            18: 0.45, 19: 0.60, 20: 0.75, 21: 0.65, 22: 0.45, 23: -0.15
+        }
+        z_hour = HOURLY_Z.get(int(hour), 0.0)
         impact_cart = probability - baseline_probability
         impact_view = 0.12
-        impact_hour = 0.04 if 18 <= hour <= 22 else 0.01
+        impact_hour = sigmoid(-2.8 + z_hour) - sigmoid(-2.8)
         price_safe = max(float(average_price), 10.0)
         z_price = -0.70 * math.log(price_safe / 250.0)
         impact_price = sigmoid(-2.8 + z_price) - sigmoid(-2.8)
