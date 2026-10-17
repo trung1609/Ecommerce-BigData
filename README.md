@@ -2,7 +2,7 @@
 
 Dự án môn **Phân tích và Tích hợp Dữ liệu lớn** trên dữ liệu thương mại điện tử, dành cho nhóm **3 người trong 2 tuần**.
 
-**Trạng thái hiện tại: đã chuẩn bị Pipeline 1 – Raw Data. Pipeline 2–6 mới là kế hoạch, chưa có mã triển khai.** README này hướng dẫn thực hiện bước 1 và mô tả đường đi cho các bước tiếp theo. Chỉ chuyển sang Pipeline 2 khi người dùng xác nhận.
+**Trạng thái hiện tại:** Pipeline 1 đã chuẩn bị; mã Pipeline 5 (feature engineering, huấn luyện, đánh giá và inference) đã được triển khai. Chạy đầy đủ trên Windows hiện còn cần Hadoop native binaries (`winutils.exe`, `hadoop.dll`) để đọc/ghi Parquet và lưu model. Pipeline 2–4 và giao diện Pipeline 6 vẫn là kế hoạch.
 
 ## 1. Mục tiêu dự án
 
@@ -99,7 +99,7 @@ Các thư mục chức năng trong `src/`, cùng `src/` và các thư mục `das
 | `config/` | Cấu hình đường dẫn, tham số; không lưu mật khẩu |
 | `docs/` | Thiết kế, hồ sơ dữ liệu và tài liệu dự án |
 | `tests/` | Kiểm thử khi có mã xử lý |
-| `requirements.txt` | Danh sách thư viện Python; hiện chỉ có chú thích |
+| `requirements.txt` | Dependencies cho PySpark MLlib và báo cáo evaluation |
 | `.gitignore` | Quy tắc bỏ qua CSV, dữ liệu sinh ra, môi trường và file cục bộ |
 | `.gitkeep` | File rỗng giúp lưu thư mục trống trong Git |
 | `README.md` | Hướng dẫn tổng quan và thứ tự thực hiện |
@@ -209,13 +209,13 @@ Kiểm tra các điều kiện:
 - Nhóm hiểu quy tắc không sửa dữ liệu gốc.
 - Các thông tin nguồn chưa biết được ghi rõ, không tự suy đoán.
 
-**Dừng tại đây và chờ xác nhận trước khi triển khai Pipeline 2. Chưa cần cài Spark, Java hoặc thư viện trong bước này.**
+**Kết thúc checklist Pipeline 1 tại đây.** Việc bắt đầu Pipeline 2 vẫn cần nhóm xác nhận; trạng thái và lệnh chạy Pipeline 5 đã triển khai được ghi trong [src/ml/README.md](src/ml/README.md).
 
 Thiết kế chi tiết: [docs/raw_data.md](docs/raw_data.md).
 
-## 5. Pipeline 2–6: kế hoạch cho các bước sau
+## 5. Pipeline 2–4 và 6: kế hoạch cho các bước sau
 
-Phần này mô tả công việc dự kiến để cả nhóm hiểu quy trình. Chưa có script hoặc lệnh chạy cho các bước này.
+Phần này mô tả các giai đoạn còn lại cần phối hợp; Pipeline 5 đã có mã nguồn.
 
 ### Pipeline 2 – Ingestion
 
@@ -253,16 +253,14 @@ Phần này mô tả công việc dự kiến để cả nhóm hiểu quy trình
 
 ### Pipeline 5 – Machine Learning
 
-**Đầu vào:** bảng đặc trưng và dữ liệu cần thiết từ tầng đã xử lý.
+**Đầu vào:** Silver Parquet; có thể dùng sample CSV cho smoke-test.
 
-1. Chốt bài toán: dự đoán cho người dùng hay phiên truy cập, tại thời điểm nào, trong khoảng thời gian tương lai nào.
-2. Xác định nhãn mua hàng và cửa sổ quan sát. Chỉ lấy đặc trưng đã có tại thời điểm dự đoán; không đưa hành vi mua cần dự đoán vào đầu vào.
-3. Chia tập huấn luyện, kiểm định và kiểm tra theo thời gian phù hợp, tránh sử dụng thông tin tương lai.
-4. Tạo mốc so sánh đơn giản, sau đó huấn luyện một mô hình phù hợp bằng Spark MLlib.
-5. Đánh giá khả năng phát hiện mua hàng và số dự đoán sai; xem precision, recall, F1 và PR-AUC phù hợp với bài toán, không chỉ accuracy.
-6. Lưu mô hình vào `models/`, ghi tham số và kết quả đánh giá vào tài liệu.
+- Nhãn là phiên có hay không có purchase; feature của phiên dương chỉ dùng view/cart trước purchase đầu tiên.
+- Chia train/test theo thời điểm bắt đầu phiên; cân bằng nhãn bằng class weight chỉ tính trên train.
+- So sánh Logistic Regression, Random Forest và GBT; chọn theo PR-AUC.
+- Lưu Spark Pipeline có encoder/scaler/classifier, báo cáo metric/curve/error analysis và cung cấp hàm inference.
 
-**Đầu ra dự kiến:** mô hình đã đánh giá, kết quả dự đoán và báo cáo giới hạn. Cách tạo nhãn và mô hình cụ thể chưa được chốt ở Pipeline 1.
+**Trạng thái:** mã nguồn và inference API đã triển khai. Báo cáo hiện có preliminary Logistic Regression smoke-check; so sánh đầy đủ và model persistence trên Windows cần Hadoop native binaries. Xem [src/ml/README.md](src/ml/README.md) và [docs/model_evaluation_report.md](docs/model_evaluation_report.md).
 
 ### Pipeline 6 – Visualization
 
