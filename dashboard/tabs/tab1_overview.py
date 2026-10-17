@@ -52,33 +52,33 @@ def render_tab1_overview(filters: dict):
     with col1:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-label">💰 Tổng Doanh Thu (GMV)</div>
+            <div class="metric-label">Tổng Doanh Thu (GMV)</div>
             <div class="metric-value">${total_gmv:,.0f}</div>
-            <div class="metric-delta delta-positive">▲ 31 Ngày Phân Tích</div>
+            <div class="metric-delta delta-positive">31 Ngày Phân Tích</div>
         </div>
         """, unsafe_allow_html=True)
     with col2:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-label">📦 Tổng Đơn Hàng Thành Công</div>
+            <div class="metric-label">Tổng Đơn Hàng Thành Công</div>
             <div class="metric-value">{int(total_orders):,}</div>
-            <div class="metric-delta delta-positive">▲ AOV: ${overall_aov:.2f}/đơn</div>
+            <div class="metric-delta delta-positive">AOV: ${overall_aov:.2f}/đơn</div>
         </div>
         """, unsafe_allow_html=True)
     with col3:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-label">🎯 Tỷ Lệ Chuyển Đổi TB</div>
+            <div class="metric-label">Tỷ Lệ Chuyển Đổi Trung Bình</div>
             <div class="metric-value">{avg_conv_rate:.2f}%</div>
-            <div class="metric-delta delta-positive">▲ Purchase / Session</div>
+            <div class="metric-delta delta-positive">Purchase / Session</div>
         </div>
         """, unsafe_allow_html=True)
     with col4:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-label">👥 Khách Hoạt Động Cao Điểm</div>
+            <div class="metric-label">Khách Hoạt Động Cao Điểm</div>
             <div class="metric-value">{int(peak_dau):,}</div>
-            <div class="metric-delta delta-positive">▲ DAU Kỷ Lục</div>
+            <div class="metric-delta delta-positive">DAU Kỷ Lục</div>
         </div>
         """, unsafe_allow_html=True)
 

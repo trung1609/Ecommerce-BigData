@@ -28,7 +28,6 @@ def main():
     # Cấu hình giao diện toàn cục
     st.set_page_config(
         page_title="E-Commerce Big Data Intelligence",
-        page_icon="🛒",
         layout="wide",
         initial_sidebar_state="expanded"
     )
@@ -60,11 +59,11 @@ def main():
 
     # Tạo 5 Tabs điều hành chính
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
-        "📈 1. Tổng Quan Chỉ Số",
-        "🌪️ 2. Phễu Chuyển Đổi",
-        "🏷️ 3. Sản Phẩm & Thương Hiệu",
-        "👥 4. Phân Khúc RFM",
-        "🔮 5. Dự Đoán Mua Hàng ML"
+        "1. Tổng Quan Chỉ Số",
+        "2. Phễu Chuyển Đổi",
+        "3. Sản Phẩm & Thương Hiệu",
+        "4. Phân Khúc RFM",
+        "5. Dự Đoán Mua Hàng ML"
     ])
 
     with tab1:

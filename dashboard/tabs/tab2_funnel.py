@@ -25,15 +25,15 @@ def render_tab2_funnel(filters: dict):
 
     row = cat_row.iloc[0]
 
-    st.markdown("### 🌪️ Phân Tích Phễu Chuyển Đổi & Hành Vi (Conversion Funnel)")
-    st.markdown(f"Đo lường hành trình người dùng: **Xem sản phẩm (View)** ➡️ **Thêm giỏ hàng (Cart)** ➡️ **Chốt đơn (Purchase)** *(Đang xem: `{selected_cat}`)*.")
+    st.markdown("### Phân Tích Phễu Chuyển Đổi & Hành Vi (Conversion Funnel)")
+    st.markdown(f"Đo lường hành trình người dùng: **Xem sản phẩm (View)** → **Thêm giỏ hàng (Cart)** → **Chốt đơn (Purchase)** *(Đang xem: `{selected_cat}`)*.")
 
     # 3 Thẻ chỉ số chuyển đổi phễu
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-label">👁️ Bước 1: Lượt Xem (Views)</div>
+            <div class="metric-label">Bước 1: Lượt Xem (Views)</div>
             <div class="metric-value">{int(row['view_sessions']):,} <span style="font-size: 1rem; color: #94a3b8;">phiên</span></div>
             <div class="metric-delta delta-positive">100% Lưu Lượng Ban Đầu</div>
         </div>
@@ -41,7 +41,7 @@ def render_tab2_funnel(filters: dict):
     with col2:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-label">🛒 Bước 2: Thêm Giỏ (Cart)</div>
+            <div class="metric-label">Bước 2: Thêm Giỏ (Cart)</div>
             <div class="metric-value">{int(row['cart_sessions']):,} <span style="font-size: 1rem; color: #94a3b8;">phiên</span></div>
             <div class="metric-delta delta-positive">Tỷ lệ thêm giỏ: {row['view_to_cart_rate_pct']}% (Rơi rụng: {row['view_to_cart_drop_pct']}%)</div>
         </div>
@@ -49,7 +49,7 @@ def render_tab2_funnel(filters: dict):
     with col3:
         st.markdown(f"""
         <div class="metric-card">
-            <div class="metric-label">💳 Bước 3: Mua Hàng (Purchase)</div>
+            <div class="metric-label">Bước 3: Mua Hàng (Purchase)</div>
             <div class="metric-value">{int(row['purchase_sessions']):,} <span style="font-size: 1rem; color: #94a3b8;">phiên</span></div>
             <div class="metric-delta delta-positive">Chuyển đổi tổng thể: {row['overall_conversion_rate_pct']}%</div>
         </div>
