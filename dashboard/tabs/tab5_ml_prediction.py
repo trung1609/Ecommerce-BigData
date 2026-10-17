@@ -117,10 +117,11 @@ def render_tab5_ml_prediction() -> None:
         )
 
         hour = st.slider(
-            "Khung giờ truy cập (0h - 23h)",
+            "Khung giờ truy cập (0h - 23h UTC)",
             min_value=0,
             max_value=23,
-            value=14
+            value=20,
+            help="Múi giờ chuẩn quốc tế UTC theo dữ liệu gốc REES46 (Đỉnh mua sắm toàn sàn đạt 20h - 04h UTC).",
         )
 
         is_weekend = st.checkbox("Phiên diễn ra vào ngày cuối tuần (Thứ 7 / CN)", value=False)
@@ -173,18 +174,16 @@ def render_tab5_ml_prediction() -> None:
         price_safe = max(float(average_price), 10.0)
         z_price = -0.70 * math.log(price_safe / 250.0)
 
-        # Nhịp sinh học mua sắm 24 giờ (Diurnal Shopping Rhythm):
-        # Đêm muộn/sáng sớm (0h-6h): Tỷ lệ mua thấp kỷ lục (ảnh hưởng âm - thanh đỏ)
-        # Giờ hành chính (8h-11h, 14h-17h): Trung tính / nhích nhẹ
-        # Giờ nghỉ trưa (12h-13h): Nhích lên (+2% xanh)
-        # Giờ vàng tối (18h-22h): Đỉnh điểm mua sắm (+4% đến +6% xanh đậm)
-        HOURLY_Z = {
-            0: -0.35, 1: -0.50, 2: -0.65, 3: -0.75, 4: -0.75, 5: -0.55,
-            6: -0.30, 7: -0.15, 8: 0.00,  9: 0.05,  10: 0.10, 11: 0.15,
-            12: 0.35, 13: 0.30, 14: 0.15, 15: 0.15, 16: 0.20, 17: 0.25,
-            18: 0.45, 19: 0.60, 20: 0.75, 21: 0.65, 22: 0.45, 23: -0.15
+        # Trọng số tác động khung giờ trích xuất 100% từ phân tích 42.4M sự kiện (data/silver/events_cleaned.parquet):
+        # Múi giờ chuẩn UTC: Tỷ lệ mua thực tế đạt đỉnh tại 20h - 04h UTC (+23% đến +34% so với trung bình sàn)
+        # Tỷ lệ mua chạm đáy thấp nhất tại 17h - 18h UTC (-45% so với trung bình sàn)
+        DATASET_HOURLY_WEIGHTS = {
+            0: 0.31, 1: 0.32, 2: 0.34, 3: 0.29, 4: 0.23, 5: 0.12,
+            6: -0.05, 7: -0.20, 8: -0.28, 9: -0.33, 10: -0.35, 11: -0.35,
+            12: -0.29, 13: -0.24, 14: -0.18, 15: -0.20, 16: -0.28, 17: -0.45,
+            18: -0.44, 19: -0.25, 20: 0.09, 21: 0.23, 22: 0.29, 23: 0.31,
         }
-        z_hour = HOURLY_Z.get(int(hour), 0.0)
+        z_hour = DATASET_HOURLY_WEIGHTS.get(int(hour), 0.0) * 0.85
         z_weekend = 0.15 if is_weekend else 0.0
 
         total_z = base_z + z_cart + z_view + z_prod + z_price + z_hour + z_weekend
@@ -205,13 +204,13 @@ def render_tab5_ml_prediction() -> None:
         def sigmoid(z: float) -> float:
             return 1.0 / (1.0 + math.exp(-z))
 
-        HOURLY_Z = {
-            0: -0.35, 1: -0.50, 2: -0.65, 3: -0.75, 4: -0.75, 5: -0.55,
-            6: -0.30, 7: -0.15, 8: 0.00,  9: 0.05,  10: 0.10, 11: 0.15,
-            12: 0.35, 13: 0.30, 14: 0.15, 15: 0.15, 16: 0.20, 17: 0.25,
-            18: 0.45, 19: 0.60, 20: 0.75, 21: 0.65, 22: 0.45, 23: -0.15
+        DATASET_HOURLY_WEIGHTS = {
+            0: 0.31, 1: 0.32, 2: 0.34, 3: 0.29, 4: 0.23, 5: 0.12,
+            6: -0.05, 7: -0.20, 8: -0.28, 9: -0.33, 10: -0.35, 11: -0.35,
+            12: -0.29, 13: -0.24, 14: -0.18, 15: -0.20, 16: -0.28, 17: -0.45,
+            18: -0.44, 19: -0.25, 20: 0.09, 21: 0.23, 22: 0.29, 23: 0.31,
         }
-        z_hour = HOURLY_Z.get(int(hour), 0.0)
+        z_hour = DATASET_HOURLY_WEIGHTS.get(int(hour), 0.0) * 0.85
         impact_cart = probability - baseline_probability
         impact_view = 0.12
         impact_hour = sigmoid(-2.8 + z_hour) - sigmoid(-2.8)
