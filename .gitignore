@@ -31,3 +31,4 @@ Thumbs.db
 spark-warehouse/
 metastore_db/
 derby.log
+scratch/

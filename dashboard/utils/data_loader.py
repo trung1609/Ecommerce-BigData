@@ -66,3 +66,10 @@ def get_available_categories() -> list:
         return ["ALL"]
     cats = funnel_df[funnel_df['main_category'] != 'ALL']['main_category'].dropna().tolist()
     return ["ALL"] + sorted(cats)
+
+def load_cross_sell_rules() -> pd.DataFrame:
+    """Nạp bảng luật liên kết cross_sell_rules.parquet."""
+    file_path = GOLD_DIR / "cross_sell_rules.parquet"
+    if not file_path.exists():
+        return pd.DataFrame()
+    return pd.read_parquet(file_path)
