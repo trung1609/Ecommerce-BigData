@@ -72,3 +72,4 @@
 | **Mã nguồn ETL Core** | `src/etl/clean_events.py` | Toàn nhóm | Chuẩn hóa ngày giờ, lọc lỗi, bổ sung cột phái sinh |
 | **Dữ liệu tầng Silver** | `data/silver/events_cleaned.parquet` | Thành viên 2 & 3 | Định dạng Parquet sạch, phân vùng tối ưu |
 | **Tài liệu Báo cáo ETL** | `docs/etl_report.md` | Báo cáo môn học | Bảng thống kê số dòng trước/sau, cấu trúc schema |
+| **Tài liệu Hướng dẫn Demo** | `docs/demo_member_1_data_engineer.md` | Thuyết trình / Demo | Tổng hợp tất cả câu lệnh và kịch bản demo 2 phút |
