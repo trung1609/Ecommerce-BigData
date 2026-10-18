@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo Cáo Tổng Thể Dự Án: Big Data E-Commerce & Machine Learning</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-light: #64748b;
+      --primary: #1e40af;
+      --primary-light: #eff6ff;
+      --primary-border: #bfdbfe;
+      --accent: #0f766e;
+      --accent-light: #f0fdf4;
+      --neutral-bg: #f1f5f9;
+      --neutral-border: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Progress & Header */
+    .progress-track {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 4px;
+      width: 100%;
+      background-color: #e2e8f0;
+      z-index: 20;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 10%;
+      background-color: var(--primary);
+      transition: width 0.3s ease;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 48px;
+      background-color: #ffffff;
+      border-bottom: 1px solid var(--card-border);
+      z-index: 10;
+    }
+
+    .brand-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 0.02em;
+    }
+
+    .project-tag {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      background-color: var(--neutral-bg);
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--card-border);
+      margin-left: 12px;
+    }
+
+    .slide-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-main);
+      background-color: var(--neutral-bg);
+      padding: 5px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--card-border);
+    }
+
+    /* Slide Deck Container */
+    #deck-container {
+      flex: 1;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 48px;
+    }
+
+    .slide {
+      position: absolute;
+      width: 100%;
+      max-width: 1180px;
+      height: 80vh;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      padding: 40px 48px;
+      display: none;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .slide.active {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Slide Typography */
+    .slide-header {
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 16px;
+    }
+
+    .slide-category {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .slide-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+
+    .slide-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Layout Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    /* Cards */
+    .card {
+      background-color: var(--neutral-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-highlight {
+      background-color: var(--primary-light);
+      border-color: var(--primary-border);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .card-subtitle {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Stat Box */
+    .stat-box {
+      background-color: #ffffff;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Bullet Lists */
+    .list {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .list li {
+      position: relative;
+      padding-left: 18px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .list li::before {
+      content: "-";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .list strong {
+      color: var(--text-main);
+    }
+
+    /* Tables */
+    .table-container {
+      width: 100%;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: #ffffff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f1f5f9;
+      color: var(--text-main);
+      font-weight: 700;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    td {
+      padding: 11px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      color: var(--text-muted);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: #f8fafc;
+    }
+
+    .code-term {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      background-color: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* Footer Controls */
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 48px 20px;
+      background-color: #ffffff;
+      border-top: 1px solid var(--card-border);
+      z-index: 10;
+    }
+
+    .hint {
+      font-size: 0.82rem;
+      color: var(--text-light);
+    }
+
+    .key {
+      background-color: var(--neutral-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .nav-group {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      background-color: #ffffff;
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .btn:hover {
+      background-color: var(--neutral-bg);
+      border-color: #cbd5e1;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background-color: #1d4ed8;
+      border-color: #1d4ed8;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Progress Bar -->
+  <div class="progress-track">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div>
+      <span class="brand-title">HỆ THỐNG PHÂN TÍCH DỮ LIỆU LỚN THƯƠNG MẠI ĐIỆN TỬ</span>
+      <span class="project-tag">Kiến Trúc End-to-End</span>
+    </div>
+    <div class="slide-counter" id="slideIndicator">01 / 10</div>
+  </header>
+
+  <!-- Slide Deck -->
+  <main id="deck-container">
+
+    <!-- SLIDE 1: Trang Tiêu Đề -->
+    <section class="slide active">
+      <div class="slide-header" style="text-align: center; border-bottom: none; padding-top: 20px;">
+        <div class="slide-category">BÁO CÁO TỔNG THỂ DỰ ÁN MÔN HỌC</div>
+        <h1 class="slide-title" style="font-size: 2.6rem; margin: 12px 0 16px;">
+          Phân Tích Dữ Liệu Lớn Hành Vi Thương Mại Điện Tử & Dự Đoán Mua Hàng
+        </h1>
+        <p class="slide-subtitle" style="font-size: 1.1rem; max-width: 850px; margin: 0 auto;">
+          Hạ tầng xử lý dữ liệu quy mô 42.4 triệu bản ghi, hệ thống báo cáo phân tích kinh doanh và mô hình trí tuệ nhân tạo dự đoán thời gian thực.
+        </p>
+      </div>
+      <div class="slide-body">
+        <div class="grid-3" style="max-width: 950px; margin: 0 auto; width: 100%;">
+          <div class="stat-box">
+            <div class="stat-number">5.67 GB</div>
+            <div class="stat-label">Dữ liệu thô 42.4M dòng</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">4 Data Marts</div>
+            <div class="stat-label">Bảng tổng hợp kinh doanh</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">Spark ML</div>
+            <div class="stat-label">Dự đoán mua hàng tự động</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: Tổng Quan Đề Tài & Bài Toán Kinh Doanh -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-category">BỐI CẢNH VÀ MỤC TIÊU</div>
+        <h2 class="slide-title">Tổng Quan Tập Dữ Liệu & Bài Toán Kinh Doanh</h2>
+        <p class="slide-subtitle">Khai phá tập dữ liệu hành vi thương mại điện tử REES46 eCommerce</p>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-subtitle">Quy mô dữ liệu nguồn</div>
+            <div class="card-title">Dữ liệu sự kiện hành vi khách hàng</div>
+            <ul class="list" style="margin-top: 8px;">
+              <li><strong>Nguồn dữ liệu:</strong> REES46 eCommerce Behavior Events (Tháng 10/2019).</li>
+              <li><strong>Dung lượng tập tin:</strong> 5.67 GB dạng CSV với 42,448,764 dòng bản ghi.</li>
+              <li><strong>Các loại hành vi ghi nhận:</strong> Xem sản phẩm (view), thêm giỏ hàng (cart), thanh toán đơn hàng (purchase).</li>
+            </ul>
+          </div>
+
+          <div class="card card-highlight">
+            <div class="card-subtitle">Mục tiêu giải quyết</div>
+            <div class="card-title">Giá trị mang lại cho doanh nghiệp</div>
+            <ul class="list" style="margin-top: 8px;">
+              <li><strong>Tối ưu hóa hạ tầng:</strong> Xử lý dữ liệu lớn không bị tràn bộ nhớ, tăng tốc độ truy vấn.</li>
+              <li><strong>Phân tích kinh doanh:</strong> Đo lường phễu chuyển đổi, doanh thu, phân khúc khách hàng và tìm ra khung giờ vàng bán chạy.</li>
+              <li><strong>Học máy dự đoán:</strong> Xác định khách hàng có khả năng hoàn tất đơn hàng để đưa ra khuyến mãi kịp thời.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: Kiến Trúc Tổng Thể Toàn Dự Án -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-category">KIẾN TRÚC HỆ THỐNG</div>
+        <h2 class="slide-title">Mô Hình Kiến Trúc Dữ Liệu 3 Tầng (Medallion Architecture)</h2>
+        <p class="slide-subtitle">Luồng dữ liệu liền mạch từ dữ liệu thô đến ứng dụng phân tích và mô hình học máy</p>
+      </div>
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-subtitle">Tầng 1: Bronze Layer (Raw)</div>
+            <div class="card-title">Dữ Liệu Thô</div>
+            <ul class="list" style="margin-top: 8px;">
+              <li>Lưu trữ tập tin gốc <span class="code-term">2019-Oct.csv</span> 5.67 GB.</li>
+              <li>Kiểm tra tính toàn vẹn bằng mã băm SHA-256.</li>
+              <li>Trích xuất dữ liệu mẫu <span class="code-term">sample_100k.csv</span> để phát triển đồng thời.</li>
+            </ul>
+          </div>
+
+          <div class="card card-highlight">
+            <div class="card-subtitle">Tầng 2: Silver Layer (Cleaned)</div>
+            <div class="card-title">Dữ Liệu Chuẩn Hóa</div>
+            <ul class="list" style="margin-top: 8px;">
+              <li>Làm sạch, khử trùng lặp và loại bỏ dữ liệu rác.</li>
+              <li>Bổ sung các trường phái sinh về thời gian và danh mục.</li>
+              <li>Lưu trữ dạng <span class="code-term">events_cleaned.parquet</span> nén Snappy 16 phân vùng.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-subtitle">Tầng 3: Gold Layer (Business Marts)</div>
+            <div class="card-title">Bảng Tổng Hợp & ML</div>
+            <ul class="list" style="margin-top: 8px;">
+              <li>Tạo các bảng Data Mart phục vụ Dashboard Streamlit.</li>
+              <li>Trích xuất bảng đặc trưng <span class="code-term">ml_features.parquet</span>.</li>
+              <li>Huấn luyện mô hình phân loại dự đoán mua hàng.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: Tính Năng Tiền Xử Lý & Làm Sạch Dữ Liệu -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-category">DATA ENGINEERING</div>
+        <h2 class="slide-title">Tính Năng Tiền Xử Lý & Làm Sạch Dữ Liệu (ETL Core)</h2>
+        <p class="slide-subtitle">Chuẩn hóa dữ liệu thô thành tập dữ liệu sạch 14 trường thông tin bằng PySpark</p>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Các quy tắc làm sạch dữ liệu</div>
+            <ul class="list" style="margin-top: 6px;">
+              <li><strong>Chuẩn hóa thời gian:</strong> Cắt bỏ hậu tố UTC, chuyển chuỗi sang kiểu dữ liệu Timestamp chuẩn.</li>
+              <li><strong>Bóc tách danh mục:</strong> Tách chuỗi <span class="code-term">category_code</span> thành 2 cấp: ngành hàng chính (<span class="code-term">main_category</span>) và ngành hàng phụ (<span class="code-term">sub_category</span>).</li>
+              <li><strong>Xử lý giá trị trống:</strong> Điền nhãn <span class="code-term">unknown</span> cho trường rỗng thay vì xóa dòng để bảo toàn dữ liệu hành vi.</li>
+              <li><strong>Lọc dữ liệu rác:</strong> Loại bỏ các bản ghi có giá bán âm hoặc bằng 0 (<span class="code-term">price &le; 0</span>), loại bỏ bản ghi thiếu mã người dùng.</li>
+              <li><strong>Khử trùng lặp:</strong> Loại bỏ các sự kiện trùng khớp hoàn toàn trên tổ hợp 5 khóa định danh.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-title">Cơ chế nạp dữ liệu tường minh (Explicit Schema)</div>
+            <ul class="list" style="margin-top: 6px;">
+              <li><strong>Không sử dụng inferSchema:</strong> Tránh việc Spark phải đọc qua tập dữ liệu 5.67 GB 2 lần để đoán kiểu dữ liệu, tiết kiệm 50% thời gian nạp ban đầu.</li>
+              <li><strong>Định nghĩa StructType:</strong> Khai báo cụ thể 9 trường dữ liệu nguyên bản với các kiểu số nguyên LongType, số thực DoubleType và chuỗi StringType.</li>
+              <li><strong>Kiểm soát chất lượng:</strong> Sử dụng cơ chế Permissive để bắt lỗi định dạng dòng dữ liệu bất thường.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: Tính Năng Tối Ưu Hóa Lưu Trữ & Hiệu Năng -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-category">STORAGE OPTIMIZATION</div>
+        <h2 class="slide-title">Tính Năng Tối Ưu Hóa Lưu Trữ Tầng Silver (Parquet)</h2>
+        <p class="slide-subtitle">Chuyển đổi định dạng lưu trữ và cân bằng phân vùng ổ đĩa</p>
+      </div>
+      <div class="slide-body">
+        <div class="table-container" style="margin-bottom: 20px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Tiêu chí đánh giá</th>
+                <th>Trước khi xử lý (Bronze CSV)</th>
+                <th>Sau khi xử lý (Silver Parquet)</th>
+                <th>Kết quả tối ưu</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Định dạng lưu trữ</strong></td>
+                <td>Tập tin văn bản dòng phẳng (CSV)</td>
+                <td>Tập tin nhị phân hướng cột (Parquet Snappy)</td>
+                <td>Chỉ đọc đúng các cột cần truy vấn</td>
+              </tr>
+              <tr>
+                <td><strong>Dung lượng tập tin</strong></td>
+                <td>5.67 GB (5,668,612,855 bytes)</td>
+                <td>2.06 GB (gồm 16 tập tin phân vùng)</td>
+                <td>Giảm 63.7% dung lượng lưu trữ</td>
+              </tr>
+              <tr>
+                <td><strong>Số lượng bản ghi</strong></td>
+                <td>42,448,764 dòng</td>
+                <td>42,349,874 dòng sạch</td>
+                <td>Loại bỏ chính xác 98,890 dòng lỗi/rác</td>
+              </tr>
+              <tr>
+                <td><strong>Thời gian quét toàn bộ</strong></td>
+                <td>10 - 15 phút</td>
+                <td>2.44 giây</td>
+                <td>Tốc độ truy vấn tăng gấp ~300 lần</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card card-highlight">
+          <div class="card-title">Kỹ thuật điều phối phân vùng Coalesce(16)</div>
+          <p class="card-desc">
+            Dữ liệu sạch 2.06 GB được gom thành đúng 16 phân vùng (~130 MB/file), khớp với kích thước khối chuẩn 128 MB của Big Data. Giải pháp này giúp tránh lỗi quá nhiều tập tin nhỏ (Small Files Problem) và tận dụng tối đa năng lực xử lý đa luồng của CPU.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: Tính Năng Xây Dựng Data Marts Tầng Gold -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-category">DATA MARTS (GOLD LAYER)</div>
+        <h2 class="slide-title">Tính Năng Xây Dựng Các Bảng Tổng Hợp Nghiệp Vụ</h2>
+        <p class="slide-subtitle">Biến đổi 42.3 triệu bản ghi sự kiện chi tiết thành các bảng dữ liệu tổng hợp sẵn sàng phân tích</p>
+      </div>
+      <div class="slide-body">
+        <div class="grid-4">
+          <div class="card">
+            <div class="card-subtitle">kpis_daily.parquet</div>
+            <div class="card-title">KPIs Theo Ngày</div>
+            <p class="card-desc">Tổng hợp doanh thu hàng ngày, số lượng giao dịch, số khách hàng hoạt động và giá trị đơn hàng trung bình (AOV).</p>
+          </div>
+
+          <div class="card">
+            <div class="card-subtitle">funnel_metrics.parquet</div>
+            <div class="card-title">Phễu Chuyển Đổi</div>
+            <p class="card-desc">Tính toán tỷ lệ chuyển đổi từng bước qua các hành vi Xem sản phẩm &rarr; Thêm vào giỏ &rarr; Thanh toán đơn hàng.</p>
+          </div>
+
+          <div class="card">
+            <div class="card-subtitle">category_brand_stats.parquet</div>
+            <div class="card-title">Ngành Hàng & Hãng</div>
+            <p class="card-desc">Thống kê doanh số, số lượt tương tác và số lượng sản phẩm bán chạy nhất của từng ngành hàng và thương hiệu.</p>
+          </div>
+
+          <div class="card">
+            <div class="card-subtitle">customer_segments.parquet</div>
+            <div class="card-title">Phân Khúc Khách Hàng</div>
+            <p class="card-desc">Phân loại tệp khách hàng theo tần suất mua hàng và tổng mức chi tiêu để phục vụ chiến dịch giữ chân người dùng.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: Tính Năng Báo Cáo & Trực Quan Hóa (Dashboard) -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-category">BUSINESS INTELLIGENCE</div>
+        <h2 class="slide-title">Tính Năng Trực Quan Hóa Trên Streamlit Dashboard</h2>
+        <p class="slide-subtitle">Bảng điều khiển tương tác trực tiếp giúp nhà quản trị theo dõi hoạt động sàn thương mại điện tử</p>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Các phân hệ báo cáo chính</div>
+            <ul class="list" style="margin-top: 6px;">
+              <li><strong>Phân hệ Tổng quan (KPIs):</strong> Theo dõi doanh thu 30 ngày, giá trị đơn hàng trung bình và số lượng giao dịch phát sinh.</li>
+              <li><strong>Phân hệ Phễu hành vi:</strong> Trực quan hóa tỷ lệ rơi rụng từ lúc xem sản phẩm tới lúc đặt mua để tối ưu trải nghiệm giỏ hàng.</li>
+              <li><strong>Phân hệ Ngành hàng & Thương hiệu:</strong> Bảng xếp hạng doanh số các thương hiệu dẫn đầu (Apple, Samsung...) và cơ cấu ngành hàng.</li>
+              <li><strong>Phân hệ Biểu đồ nhiệt (Heatmap):</strong> Nhận diện khung giờ vàng mua sắm trong ngày (0 - 23h) và thứ trong tuần (Thứ 2 - Chủ Nhật).</li>
+            </ul>
+          </div>
+
+          <div class="card card-highlight">
+            <div class="card-title">Trải nghiệm tương tác người dùng</div>
+            <ul class="list" style="margin-top: 6px;">
+              <li><strong>Bộ lọc đa chiều:</strong> Cho phép lọc theo khoảng thời gian thực tế và chọn xem toàn sàn hoặc từng ngành hàng cụ thể.</li>
+              <li><strong>Tốc độ phản hồi tức thì:</strong> Dashboard đọc trực tiếp từ các bảng Gold Parquet đã tổng hợp sẵn, tải biểu đồ dưới 1 giây.</li>
+              <li><strong>Giao diện thân thiện:</strong> Sử dụng thư viện trực quan hóa Plotly tương tác cao, hỗ trợ phóng to, thu nhỏ và xuất hình ảnh.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: Tính Năng Trích Xuất Đặc Trưng Học Máy -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-category">MACHINE LEARNING PIPELINE</div>
+        <h2 class="slide-title">Tính Năng Kỹ Thuật Đặc Trưng Học Máy (Feature Engineering)</h2>
+        <p class="slide-subtitle">Xây dựng tập dữ liệu đặc trưng ml_features.parquet để phục vụ bài toán dự đoán hành vi</p>
+      </div>
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-subtitle">Nhóm đặc trưng phiên truy cập</div>
+            <div class="card-title">Hành Vi Phiên (Session)</div>
+            <ul class="list" style="margin-top: 8px;">
+              <li>Số lượt xem sản phẩm trong cùng một phiên truy cập.</li>
+              <li>Số lần thực hiện hành động thêm vào giỏ hàng.</li>
+              <li>Thời lượng tương tác và số lượng sản phẩm duy nhất được xem.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-subtitle">Nhóm đặc trưng sản phẩm</div>
+            <div class="card-title">Thuộc Tính Sản Phẩm</div>
+            <ul class="list" style="margin-top: 8px;">
+              <li>Mức giá bán sản phẩm (<span class="code-term">price</span>) được chuẩn hóa.</li>
+              <li>Mã ngành hàng chính (<span class="code-term">main_category</span>) mã hóa StringIndexer.</li>
+              <li>Độ phổ biến của thương hiệu và sản phẩm trên toàn sàn.</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <div class="card-subtitle">Nhóm đặc trưng thời gian</div>
+            <div class="card-title">Chu Kỳ Thời Gian</div>
+            <ul class="list" style="margin-top: 8px;">
+              <li>Khung giờ tương tác trong ngày (<span class="code-term">hour</span> từ 0 đến 23).</li>
+              <li>Thứ trong tuần (<span class="code-term">day_of_week</span>).</li>
+              <li>Đánh dấu ngày truy cập là ngày thường hay ngày cuối tuần.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: Tính Năng Huấn Luyện & Đánh Giá Mô Hình ML -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-category">MACHINE LEARNING MODELS</div>
+        <h2 class="slide-title">Tính Năng Huấn Luyện & Đánh Giá Mô Hình Spark ML</h2>
+        <p class="slide-subtitle">Xây dựng pipeline phân loại nhị phân dự đoán khách hàng có mua hàng hay không (is_purchased)</p>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">Thiết kế pipeline mô hình học máy</div>
+            <ul class="list" style="margin-top: 6px;">
+              <li><strong>Bài toán đặt ra:</strong> Dự đoán xác suất mua hàng (<span class="code-term">is_purchased = 1</span>) dựa trên hành vi tương tác sớm.</li>
+              <li><strong>VectorAssembler:</strong> Đóng gói toàn bộ các đặc trưng số học và danh mục thành một vector đặc trưng duy nhất.</li>
+              <li><strong>So sánh thuật toán:</strong> Thử nghiệm và đánh giá giữa Logistic Regression, Random Forest và Gradient-Boosted Trees (GBT).</li>
+              <li><strong>Đóng gói mô hình:</strong> Lưu trữ toàn bộ pipeline đã huấn luyện tại thư mục <span class="code-term">models/best_purchase_model/</span>.</li>
+            </ul>
+          </div>
+
+          <div class="card card-highlight">
+            <div class="card-title">Tiêu chí đánh giá chất lượng mô hình</div>
+            <ul class="list" style="margin-top: 6px;">
+              <li><strong>Độ đo diện tích dưới đường cong (ROC-AUC):</strong> Đạt mức tin cậy cao trên tập kiểm thử độc lập (Test Set).</li>
+              <li><strong>Độ đo PR-AUC & F1-Score:</strong> Tối ưu hóa việc dự đoán trên tập dữ liệu mất cân bằng (tỷ lệ mua hàng thực tế chỉ chiếm khoảng 1.7% tổng sự kiện).</li>
+              <li><strong>Báo cáo tự động:</strong> Xuất tự động tài liệu đánh giá và biểu đồ hiệu năng tại <span class="code-term">docs/model_evaluation_report.md</span>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: Tính Năng Dự Đoán Trực Tiếp & Tổng Kết Dự Án -->
+    <section class="slide">
+      <div class="slide-header">
+        <div class="slide-category">INFERENCE & CONCLUSION</div>
+        <h2 class="slide-title">Tính Năng Suy Luận Thời Gian Thực & Tổng Kết Dự Án</h2>
+        <p class="slide-subtitle">Kết nối mô hình học máy vào ứng dụng thực tế và tổng kết giá trị toàn hệ thống</p>
+      </div>
+      <div class="slide-body">
+        <div class="grid-2" style="margin-bottom: 20px;">
+          <div class="card">
+            <div class="card-subtitle">Ứng dụng thực tế</div>
+            <div class="card-title">Dự đoán mua hàng theo thời gian thực</div>
+            <p class="card-desc" style="margin-bottom: 8px;">
+              Tích hợp module suy luận <span class="code-term">src/ml/predict.py</span> trực tiếp vào tab Dự đoán trên Dashboard Streamlit:
+            </p>
+            <ul class="list">
+              <li>Nhân viên kinh doanh có thể nhập thông số một phiên truy cập (ngành hàng, mức giá, số lượt xem).</li>
+              <li>Hệ thống trả về ngay xác suất mua hàng (%) và phân loại mức độ tiềm năng của khách hàng.</li>
+            </ul>
+          </div>
+
+          <div class="card card-highlight">
+            <div class="card-subtitle">Kết quả toàn dự án</div>
+            <div class="card-title">Hệ thống hoàn chỉnh từ đầu đến cuối</div>
+            <ul class="list" style="margin-top: 6px;">
+              <li><strong>Hạ tầng vững chắc:</strong> Làm sạch 42.4 triệu bản ghi, giảm 63.7% dung lượng, quét dữ liệu trong 2.44 giây.</li>
+              <li><strong>Nghiệp vụ rõ ràng:</strong> Dashboard phân tích kinh doanh cung cấp góc nhìn toàn diện về sàn TMĐT.</li>
+              <li><strong>Trí tuệ nhân tạo:</strong> Mô hình phân loại hỗ trợ ra quyết định kinh doanh chủ động và chính xác.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+          Đồ án hoàn thành trọn vẹn 6 mốc Pipeline: Raw Data &rarr; Ingestion &rarr; ETL Core &rarr; Silver/Gold Storage &rarr; Machine Learning &rarr; Visualization.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Controls -->
+  <footer>
+    <div class="hint">
+      Sử dụng phím <span class="key">&larr;</span> <span class="key">&rarr;</span> hoặc <span class="key">Space</span> để chuyển slide | Phím <span class="key">F</span> để xem toàn màn hình
+    </div>
+    <div class="nav-group">
+      <button class="btn" id="prevBtn" onclick="prevSlide()">&larr; Trang trước</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextSlide()">Trang tiếp &rarr;</button>
+    </div>
+  </footer>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    let currentSlide = 0;
+
+    const progressBar = document.getElementById('progressBar');
+    const slideIndicator = document.getElementById('slideIndicator');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function updateDeck() {
+      slides.forEach((slide, idx) => {
+        slide.classList.toggle('active', idx === currentSlide);
+      });
+
+      // Update indicator
+      const currentStr = String(currentSlide + 1).padStart(2, '0');
+      const totalStr = String(totalSlides).padStart(2, '0');
+      slideIndicator.textContent = `${currentStr} / ${totalStr}`;
+
+      // Update progress bar
+      const progress = ((currentSlide + 1) / totalSlides) * 100;
+      progressBar.style.width = `${progress}%`;
+
+      // Disable/Enable buttons
+      prevBtn.disabled = currentSlide === 0;
+      prevBtn.style.opacity = currentSlide === 0 ? '0.4' : '1';
+      prevBtn.style.cursor = currentSlide === 0 ? 'not-allowed' : 'pointer';
+
+      if (currentSlide === totalSlides - 1) {
+        nextBtn.textContent = 'Kết thúc ✓';
+      } else {
+        nextBtn.innerHTML = 'Trang tiếp &rarr;';
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        updateDeck();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateDeck();
+      }
+    }
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      } else if (e.key === 'Home') {
+        currentSlide = 0;
+        updateDeck();
+      } else if (e.key === 'End') {
+        currentSlide = totalSlides - 1;
+        updateDeck();
+      }
+    });
+
+    // Touch swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      if (touchEndX < touchStartX - 50) nextSlide();
+      if (touchEndX > touchStartX + 50) prevSlide();
+    });
+
+    // Initialize
+    updateDeck();
+  </script>
+</body>
+</html>
