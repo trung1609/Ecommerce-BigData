@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Báo Cáo Tổng Thể Dự Án: Big Data E-Commerce & Machine Learning</title>
+  <title>Báo Cáo Tổng Thể Dự Án: Big Data E-Commerce, Gợi Ý Sản Phẩm & Học Máy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -42,7 +42,6 @@
       flex-direction: column;
     }
 
-    /* Top Progress & Header */
     .progress-track {
       position: absolute;
       top: 0;
@@ -99,7 +98,6 @@
       border: 1px solid var(--card-border);
     }
 
-    /* Slide Deck Container */
     #deck-container {
       flex: 1;
       position: relative;
@@ -132,7 +130,6 @@
       transform: translateY(0);
     }
 
-    /* Slide Typography */
     .slide-header {
       margin-bottom: 24px;
       border-bottom: 1px solid var(--card-border);
@@ -169,7 +166,6 @@
       justify-content: center;
     }
 
-    /* Layout Grids */
     .grid-2 {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -188,7 +184,6 @@
       gap: 16px;
     }
 
-    /* Cards */
     .card {
       background-color: var(--neutral-bg);
       border: 1px solid var(--card-border);
@@ -225,7 +220,6 @@
       line-height: 1.5;
     }
 
-    /* Stat Box */
     .stat-box {
       background-color: #ffffff;
       border: 1px solid var(--card-border);
@@ -251,7 +245,6 @@
       letter-spacing: 0.05em;
     }
 
-    /* Bullet Lists */
     .list {
       list-style-type: none;
       display: flex;
@@ -279,7 +272,6 @@
       color: var(--text-main);
     }
 
-    /* Tables */
     .table-container {
       width: 100%;
       border: 1px solid var(--card-border);
@@ -328,7 +320,6 @@
       font-weight: 600;
     }
 
-    /* Footer Controls */
     footer {
       display: flex;
       justify-content: space-between;
@@ -400,7 +391,6 @@
   <header>
     <div>
       <span class="brand-title">HỆ THỐNG PHÂN TÍCH DỮ LIỆU LỚN THƯƠNG MẠI ĐIỆN TỬ</span>
-      <span class="project-tag">Kiến Trúc End-to-End</span>
     </div>
     <div class="slide-counter" id="slideIndicator">01 / 10</div>
   </header>
@@ -412,11 +402,11 @@
     <section class="slide active">
       <div class="slide-header" style="text-align: center; border-bottom: none; padding-top: 20px;">
         <div class="slide-category">BÁO CÁO TỔNG THỂ DỰ ÁN MÔN HỌC</div>
-        <h1 class="slide-title" style="font-size: 2.6rem; margin: 12px 0 16px;">
-          Phân Tích Dữ Liệu Lớn Hành Vi Thương Mại Điện Tử & Dự Đoán Mua Hàng
+        <h1 class="slide-title" style="font-size: 2.5rem; margin: 12px 0 16px;">
+          Phân Tích Dữ Liệu Lớn Thương Mại Điện Tử, Gợi Ý Sản Phẩm & Dự Đoán Mua Hàng
         </h1>
-        <p class="slide-subtitle" style="font-size: 1.1rem; max-width: 850px; margin: 0 auto;">
-          Hạ tầng xử lý dữ liệu quy mô 42.4 triệu bản ghi, hệ thống báo cáo phân tích kinh doanh và mô hình trí tuệ nhân tạo dự đoán thời gian thực.
+        <p class="slide-subtitle" style="font-size: 1.05rem; max-width: 880px; margin: 0 auto;">
+          Hạ tầng xử lý 42.4 triệu bản ghi, hệ thống báo cáo phân tích kinh doanh, công cụ gợi ý giỏ hàng thông minh và mô hình học máy thời gian thực.
         </p>
       </div>
       <div class="slide-body">
@@ -426,8 +416,8 @@
             <div class="stat-label">Dữ liệu thô 42.4M dòng</div>
           </div>
           <div class="stat-box">
-            <div class="stat-number">4 Data Marts</div>
-            <div class="stat-label">Bảng tổng hợp kinh doanh</div>
+            <div class="stat-number">Two-Stage</div>
+            <div class="stat-label">Hệ thống gợi ý sản phẩm</div>
           </div>
           <div class="stat-box">
             <div class="stat-number">Spark ML</div>
@@ -437,7 +427,7 @@
       </div>
     </section>
 
-    <!-- SLIDE 2: Tổng Quan Đề Tài & Bài Toán Kinh Doanh -->
+    <!-- SLIDE 2: Bối Cảnh & Bài Toán Kinh Doanh -->
     <section class="slide">
       <div class="slide-header">
         <div class="slide-category">BỐI CẢNH VÀ MỤC TIÊU</div>
@@ -460,21 +450,21 @@
             <div class="card-subtitle">Mục tiêu giải quyết</div>
             <div class="card-title">Giá trị mang lại cho doanh nghiệp</div>
             <ul class="list" style="margin-top: 8px;">
-              <li><strong>Tối ưu hóa hạ tầng:</strong> Xử lý dữ liệu lớn không bị tràn bộ nhớ, tăng tốc độ truy vấn.</li>
-              <li><strong>Phân tích kinh doanh:</strong> Đo lường phễu chuyển đổi, doanh thu, phân khúc khách hàng và tìm ra khung giờ vàng bán chạy.</li>
-              <li><strong>Học máy dự đoán:</strong> Xác định khách hàng có khả năng hoàn tất đơn hàng để đưa ra khuyến mãi kịp thời.</li>
+              <li><strong>Tối ưu hóa hạ tầng:</strong> Xử lý dữ liệu lớn không bị tràn bộ nhớ, tăng tốc độ truy vấn từ 15 phút xuống 2.44 giây.</li>
+              <li><strong>Bán chéo thông minh:</strong> Khai phá luật kết hợp giỏ hàng để gợi ý sản phẩm liên quan, nâng cao giá trị đơn hàng (AOV).</li>
+              <li><strong>Học máy dự đoán:</strong> Xác định khách hàng tiềm năng có khả năng chốt đơn để tối ưu chiến dịch khuyến mãi.</li>
             </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SLIDE 3: Kiến Trúc Tổng Thể Toàn Dự Án -->
+    <!-- SLIDE 3: Kiến Trúc Tổng Thể 3 Tầng Dữ Liệu -->
     <section class="slide">
       <div class="slide-header">
         <div class="slide-category">KIẾN TRÚC HỆ THỐNG</div>
         <h2 class="slide-title">Mô Hình Kiến Trúc Dữ Liệu 3 Tầng (Medallion Architecture)</h2>
-        <p class="slide-subtitle">Luồng dữ liệu liền mạch từ dữ liệu thô đến ứng dụng phân tích và mô hình học máy</p>
+        <p class="slide-subtitle">Luồng xử lý xuyên suốt từ dữ liệu thô đến kho lưu trữ, phân tích kinh doanh và trí tuệ nhân tạo</p>
       </div>
       <div class="slide-body">
         <div class="grid-3">
@@ -484,7 +474,7 @@
             <ul class="list" style="margin-top: 8px;">
               <li>Lưu trữ tập tin gốc <span class="code-term">2019-Oct.csv</span> 5.67 GB.</li>
               <li>Kiểm tra tính toàn vẹn bằng mã băm SHA-256.</li>
-              <li>Trích xuất dữ liệu mẫu <span class="code-term">sample_100k.csv</span> để phát triển đồng thời.</li>
+              <li>Trích xuất dữ liệu mẫu <span class="code-term">sample_100k.csv</span> để nhóm phát triển song song.</li>
             </ul>
           </div>
 
@@ -494,24 +484,24 @@
             <ul class="list" style="margin-top: 8px;">
               <li>Làm sạch, khử trùng lặp và loại bỏ dữ liệu rác.</li>
               <li>Bổ sung các trường phái sinh về thời gian và danh mục.</li>
-              <li>Lưu trữ dạng <span class="code-term">events_cleaned.parquet</span> nén Snappy 16 phân vùng.</li>
+              <li>Lưu trữ dạng <span class="code-term">events_cleaned.parquet</span> nén Snappy 16 phân vùng tối ưu.</li>
             </ul>
           </div>
 
           <div class="card">
             <div class="card-subtitle">Tầng 3: Gold Layer (Business Marts)</div>
-            <div class="card-title">Bảng Tổng Hợp & ML</div>
+            <div class="card-title">Bảng Tổng Hợp, MBA & ML</div>
             <ul class="list" style="margin-top: 8px;">
-              <li>Tạo các bảng Data Mart phục vụ Dashboard Streamlit.</li>
-              <li>Trích xuất bảng đặc trưng <span class="code-term">ml_features.parquet</span>.</li>
-              <li>Huấn luyện mô hình phân loại dự đoán mua hàng.</li>
+              <li>Tạo 4 bảng Data Mart phục vụ Dashboard Streamlit.</li>
+              <li>Bảng luật kết hợp giỏ hàng <span class="code-term">cross_sell_rules.parquet</span>.</li>
+              <li>Bảng đặc trưng học máy <span class="code-term">ml_features.parquet</span>.</li>
             </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SLIDE 4: Tính Năng Tiền Xử Lý & Làm Sạch Dữ Liệu -->
+    <!-- SLIDE 4: Tính Năng Tiền Xử Lý Dữ Liệu (ETL Core) -->
     <section class="slide">
       <div class="slide-header">
         <div class="slide-category">DATA ENGINEERING</div>
@@ -525,7 +515,7 @@
             <ul class="list" style="margin-top: 6px;">
               <li><strong>Chuẩn hóa thời gian:</strong> Cắt bỏ hậu tố UTC, chuyển chuỗi sang kiểu dữ liệu Timestamp chuẩn.</li>
               <li><strong>Bóc tách danh mục:</strong> Tách chuỗi <span class="code-term">category_code</span> thành 2 cấp: ngành hàng chính (<span class="code-term">main_category</span>) và ngành hàng phụ (<span class="code-term">sub_category</span>).</li>
-              <li><strong>Xử lý giá trị trống:</strong> Điền nhãn <span class="code-term">unknown</span> cho trường rỗng thay vì xóa dòng để bảo toàn dữ liệu hành vi.</li>
+              <li><strong>Xử lý giá trị trống:</strong> Điền nhãn <span class="code-term">unknown</span> cho trường rỗng để bảo toàn thông tin hành vi người dùng.</li>
               <li><strong>Lọc dữ liệu rác:</strong> Loại bỏ các bản ghi có giá bán âm hoặc bằng 0 (<span class="code-term">price &le; 0</span>), loại bỏ bản ghi thiếu mã người dùng.</li>
               <li><strong>Khử trùng lặp:</strong> Loại bỏ các sự kiện trùng khớp hoàn toàn trên tổ hợp 5 khóa định danh.</li>
             </ul>
@@ -543,7 +533,7 @@
       </div>
     </section>
 
-    <!-- SLIDE 5: Tính Năng Tối Ưu Hóa Lưu Trữ & Hiệu Năng -->
+    <!-- SLIDE 5: Tính Năng Tối Ưu Hóa Lưu Trữ Tầng Silver -->
     <section class="slide">
       <div class="slide-header">
         <div class="slide-category">STORAGE OPTIMIZATION</div>
@@ -593,7 +583,7 @@
         <div class="card card-highlight">
           <div class="card-title">Kỹ thuật điều phối phân vùng Coalesce(16)</div>
           <p class="card-desc">
-            Dữ liệu sạch 2.06 GB được gom thành đúng 16 phân vùng (~130 MB/file), khớp với kích thước khối chuẩn 128 MB của Big Data. Giải pháp này giúp tránh lỗi quá nhiều tập tin nhỏ (Small Files Problem) và tận dụng tối đa năng lực xử lý đa luồng của CPU.
+            Dữ liệu sạch 2.06 GB được gom thành đúng 16 phân vùng (~130 MB/file), khớp với kích thước khối chuẩn 128 MB của Big Data. Giải pháp này giúp tránh lỗi quá nhiều tập tin nhỏ (Small Files Problem) và tận dụng tối đa năng lực xử lý 16 luồng của CPU.
           </p>
         </div>
       </div>
@@ -635,7 +625,7 @@
       </div>
     </section>
 
-    <!-- SLIDE 7: Tính Năng Báo Cáo & Trực Quan Hóa (Dashboard) -->
+    <!-- SLIDE 7: Tính Năng Báo Cáo Trực Quan Hóa (Dashboard) -->
     <section class="slide">
       <div class="slide-header">
         <div class="slide-category">BUSINESS INTELLIGENCE</div>
@@ -666,52 +656,40 @@
       </div>
     </section>
 
-    <!-- SLIDE 8: Tính Năng Trích Xuất Đặc Trưng Học Máy -->
+    <!-- SLIDE 8: Tính Năng Gợi Ý Sản Phẩm Thông Minh (Two-Stage Recommendation) -->
     <section class="slide">
       <div class="slide-header">
-        <div class="slide-category">MACHINE LEARNING PIPELINE</div>
-        <h2 class="slide-title">Tính Năng Kỹ Thuật Đặc Trưng Học Máy (Feature Engineering)</h2>
-        <p class="slide-subtitle">Xây dựng tập dữ liệu đặc trưng ml_features.parquet để phục vụ bài toán dự đoán hành vi</p>
+        <div class="slide-category">RECOMMENDATION ENGINE</div>
+        <h2 class="slide-title">Tính Năng Gợi Ý Sản Phẩm Thông Minh (Two-Stage Recommendation)</h2>
+        <p class="slide-subtitle">Kết hợp phân tích giỏ hàng (Market Basket Analysis) và thuật toán tái xếp hạng sản phẩm</p>
       </div>
       <div class="slide-body">
-        <div class="grid-3">
+        <div class="grid-2">
           <div class="card">
-            <div class="card-subtitle">Nhóm đặc trưng phiên truy cập</div>
-            <div class="card-title">Hành Vi Phiên (Session)</div>
-            <ul class="list" style="margin-top: 8px;">
-              <li>Số lượt xem sản phẩm trong cùng một phiên truy cập.</li>
-              <li>Số lần thực hiện hành động thêm vào giỏ hàng.</li>
-              <li>Thời lượng tương tác và số lượng sản phẩm duy nhất được xem.</li>
+            <div class="card-title">1. Khai phá luật kết hợp giỏ hàng (MBA)</div>
+            <ul class="list" style="margin-top: 6px;">
+              <li><strong>Mô hình đồng xuất hiện:</strong> Phân tích hành vi tương tác cùng lúc giữa các danh mục sản phẩm trong cùng một phiên người dùng (session).</li>
+              <li><strong>Độ đo chất lượng luật:</strong> Tính toán các chỉ số thống kê Support, Confidence và Lift để chọn lọc luật bán chéo (Cross-sell) mạnh nhất.</li>
+              <li><strong>Xuất bảng Gold:</strong> Lưu trữ kết quả luật kết hợp tại tập tin <span class="code-term">data/gold/cross_sell_rules.parquet</span> để phục vụ tra cứu tốc độ cao.</li>
             </ul>
           </div>
 
-          <div class="card">
-            <div class="card-subtitle">Nhóm đặc trưng sản phẩm</div>
-            <div class="card-title">Thuộc Tính Sản Phẩm</div>
-            <ul class="list" style="margin-top: 8px;">
-              <li>Mức giá bán sản phẩm (<span class="code-term">price</span>) được chuẩn hóa.</li>
-              <li>Mã ngành hàng chính (<span class="code-term">main_category</span>) mã hóa StringIndexer.</li>
-              <li>Độ phổ biến của thương hiệu và sản phẩm trên toàn sàn.</li>
-            </ul>
-          </div>
-
-          <div class="card">
-            <div class="card-subtitle">Nhóm đặc trưng thời gian</div>
-            <div class="card-title">Chu Kỳ Thời Gian</div>
-            <ul class="list" style="margin-top: 8px;">
-              <li>Khung giờ tương tác trong ngày (<span class="code-term">hour</span> từ 0 đến 23).</li>
-              <li>Thứ trong tuần (<span class="code-term">day_of_week</span>).</li>
-              <li>Đánh dấu ngày truy cập là ngày thường hay ngày cuối tuần.</li>
+          <div class="card card-highlight">
+            <div class="card-title">2. Cơ chế gợi ý 2 giai đoạn (Two-Stage Engine)</div>
+            <ul class="list" style="margin-top: 6px;">
+              <li><strong>Giai đoạn 1 - Sinh ứng viên (Candidate Generation):</strong> Lấy sản phẩm đang xem, trích xuất danh sách ngành hàng liên quan thông qua luật kết hợp hoặc danh mục tương đồng.</li>
+              <li><strong>Giai đoạn 2 - Tái xếp hạng (Reranking):</strong> Chấm điểm và sắp xếp các ứng viên dựa trên độ tương đồng về giá (price proximity), độ phổ biến và điểm hành vi (purchase/cart).</li>
+              <li><strong>Tích hợp Dashboard:</strong> Hiển thị trực tiếp danh sách Top K sản phẩm gợi ý kèm lý do gợi ý và hệ số Lift tương quan trên giao diện Tab 3.</li>
             </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SLIDE 9: Tính Năng Huấn Luyện & Đánh Giá Mô Hình ML -->
+    <!-- SLIDE 9: Tính Năng Huấn Luyện Mô Hình Học Máy Spark ML -->
     <section class="slide">
       <div class="slide-header">
-        <div class="slide-category">MACHINE LEARNING MODELS</div>
+        <div class="slide-category">MACHINE LEARNING PIPELINE</div>
         <h2 class="slide-title">Tính Năng Huấn Luyện & Đánh Giá Mô Hình Spark ML</h2>
         <p class="slide-subtitle">Xây dựng pipeline phân loại nhị phân dự đoán khách hàng có mua hàng hay không (is_purchased)</p>
       </div>
@@ -720,7 +698,7 @@
           <div class="card">
             <div class="card-title">Thiết kế pipeline mô hình học máy</div>
             <ul class="list" style="margin-top: 6px;">
-              <li><strong>Bài toán đặt ra:</strong> Dự đoán xác suất mua hàng (<span class="code-term">is_purchased = 1</span>) dựa trên hành vi tương tác sớm.</li>
+              <li><strong>Tập đặc trưng ml_features:</strong> Tổng hợp các nhóm đặc trưng phiên truy cập (số lượt view, cart), thuộc tính giá sản phẩm và chu kỳ thời gian.</li>
               <li><strong>VectorAssembler:</strong> Đóng gói toàn bộ các đặc trưng số học và danh mục thành một vector đặc trưng duy nhất.</li>
               <li><strong>So sánh thuật toán:</strong> Thử nghiệm và đánh giá giữa Logistic Regression, Random Forest và Gradient-Boosted Trees (GBT).</li>
               <li><strong>Đóng gói mô hình:</strong> Lưu trữ toàn bộ pipeline đã huấn luyện tại thư mục <span class="code-term">models/best_purchase_model/</span>.</li>
@@ -739,7 +717,7 @@
       </div>
     </section>
 
-    <!-- SLIDE 10: Tính Năng Dự Đoán Trực Tiếp & Tổng Kết Dự Án -->
+    <!-- SLIDE 10: Tính Năng Dự Đoán Trực Tiếp & Tổng Kết Hệ Thống -->
     <section class="slide">
       <div class="slide-header">
         <div class="slide-category">INFERENCE & CONCLUSION</div>
@@ -764,15 +742,11 @@
             <div class="card-subtitle">Kết quả toàn dự án</div>
             <div class="card-title">Hệ thống hoàn chỉnh từ đầu đến cuối</div>
             <ul class="list" style="margin-top: 6px;">
-              <li><strong>Hạ tầng vững chắc:</strong> Làm sạch 42.4 triệu bản ghi, giảm 63.7% dung lượng, quét dữ liệu trong 2.44 giây.</li>
-              <li><strong>Nghiệp vụ rõ ràng:</strong> Dashboard phân tích kinh doanh cung cấp góc nhìn toàn diện về sàn TMĐT.</li>
-              <li><strong>Trí tuệ nhân tạo:</strong> Mô hình phân loại hỗ trợ ra quyết định kinh doanh chủ động và chính xác.</li>
+              <li><strong>Kỹ thuật dữ liệu lớn:</strong> Làm sạch 42.4 triệu bản ghi, giảm 63.7% dung lượng, quét dữ liệu trong 2.44 giây.</li>
+              <li><strong>Phân tích & Gợi ý sản phẩm:</strong> Dashboard BI trực quan kết hợp công cụ gợi ý bán chéo (Cross-sell) 2 giai đoạn.</li>
+              <li><strong>Trí tuệ nhân tạo:</strong> Mô hình phân loại hỗ trợ ra quyết định kinh doanh chủ động và chuẩn xác.</li>
             </ul>
           </div>
-        </div>
-
-        <div style="text-align: center; color: var(--text-muted); font-size: 0.9rem;">
-          Đồ án hoàn thành trọn vẹn 6 mốc Pipeline: Raw Data &rarr; Ingestion &rarr; ETL Core &rarr; Silver/Gold Storage &rarr; Machine Learning &rarr; Visualization.
         </div>
       </div>
     </section>
@@ -805,16 +779,13 @@
         slide.classList.toggle('active', idx === currentSlide);
       });
 
-      // Update indicator
       const currentStr = String(currentSlide + 1).padStart(2, '0');
       const totalStr = String(totalSlides).padStart(2, '0');
       slideIndicator.textContent = `${currentStr} / ${totalStr}`;
 
-      // Update progress bar
       const progress = ((currentSlide + 1) / totalSlides) * 100;
       progressBar.style.width = `${progress}%`;
 
-      // Disable/Enable buttons
       prevBtn.disabled = currentSlide === 0;
       prevBtn.style.opacity = currentSlide === 0 ? '0.4' : '1';
       prevBtn.style.cursor = currentSlide === 0 ? 'not-allowed' : 'pointer';
@@ -840,7 +811,6 @@
       }
     }
 
-    // Keyboard navigation
     window.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
         e.preventDefault();
@@ -863,7 +833,6 @@
       }
     });
 
-    // Touch swipe support
     let touchStartX = 0;
     let touchEndX = 0;
 
@@ -877,7 +846,6 @@
       if (touchEndX > touchStartX + 50) prevSlide();
     });
 
-    // Initialize
     updateDeck();
   </script>
 </body>
