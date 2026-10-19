@@ -24,6 +24,7 @@ from dashboard.tabs.tab3_products import render_tab3_products
 from dashboard.tabs.tab4_rfm import render_tab4_rfm
 from dashboard.tabs.tab5_ml_prediction import render_tab5_ml_prediction
 
+
 def main():
     # Cấu hình giao diện toàn cục
     st.set_page_config(
@@ -66,6 +67,7 @@ def main():
         "5. Dự Đoán Mua Hàng ML"
     ])
 
+    import importlib
     with tab1:
         render_tab1_overview(filters)
 
@@ -73,13 +75,17 @@ def main():
         render_tab2_funnel(filters)
 
     with tab3:
-        render_tab3_products(filters)
+        from dashboard.tabs import tab3_products
+        importlib.reload(tab3_products)
+        tab3_products.render_tab3_products(filters)
 
     with tab4:
         render_tab4_rfm(filters)
 
     with tab5:
-        render_tab5_ml_prediction()
+        from dashboard.tabs import tab5_ml_prediction
+        importlib.reload(tab5_ml_prediction)
+        tab5_ml_prediction.render_tab5_ml_prediction()
 
     # Footer
     st.markdown("""
