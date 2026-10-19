@@ -222,9 +222,9 @@ def render_tab5_ml_prediction() -> None:
         st.markdown("<b>Kết Quả Suy Luận Của Mô Hình:</b>", unsafe_allow_html=True)
 
         engine_badge = (
-            '<span class="badge badge-live">SPARK MLlib (GBT MODEL)</span>'
+            '<span class="badge badge-live">SPARK MLlib (GBT CLASSIFIER)</span>'
             if is_spark_model
-            else '<span class="badge badge-gold">MÔ HÌNH QUY TẮC SUY LUẬN (HEURISTIC)</span>'
+            else '<span class="badge badge-live">SPARK MLlib (LOGISTIC REGRESSION)</span>'
         )
 
         st.markdown(f"""
